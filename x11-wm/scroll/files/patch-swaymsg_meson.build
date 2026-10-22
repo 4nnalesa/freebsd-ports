@@ -1,0 +1,8 @@
+--- swaymsg/meson.build.orig	2026-08-14 06:49:35 UTC
++++ swaymsg/meson.build
+@@ -1,4 +1,4 @@
+-readline = cc.find_library('readline', required: true)
++readline = cc.find_library('readline', required: true, dirs: ['/usr/local/lib'])
+ 
+ executable(
+ 	'scrollmsg',

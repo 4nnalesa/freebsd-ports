@@ -1,0 +1,3 @@
+scroll is a Wayland compositor forked from sway. The main difference
+is scroll only supports one layout, a scrolling layout similar to
+PaperWM, niri or hyprscroller.
