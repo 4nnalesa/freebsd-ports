@@ -34,6 +34,7 @@
     SUBDIR += bhotkeys-audio
     SUBDIR += bhotkeys-brightness
     SUBDIR += bhotkeys-display-common
+    SUBDIR += bhotkeys-dwm
     SUBDIR += bhotkeys-extend
     SUBDIR += bhotkeys-gnome
     SUBDIR += bhotkeys-i3
@@ -76,6 +77,7 @@
     SUBDIR += controllermap
     SUBDIR += cool-retro-term
     SUBDIR += coreterminal
+    SUBDIR += cosmic-app-library
     SUBDIR += cosmic-bg
     SUBDIR += damask
     SUBDIR += darktile
@@ -370,7 +372,6 @@
     SUBDIR += plank
     SUBDIR += plasma-wayland-protocols
     SUBDIR += plasma6-kactivitymanagerd
-    SUBDIR += plasma6-kgamma
     SUBDIR += plasma6-kglobalacceld
     SUBDIR += plasma6-kscreen
     SUBDIR += plasma6-kwayland
@@ -384,6 +385,21 @@
     SUBDIR += plasma6-plasma-desktop
     SUBDIR += plasma6-plasma-integration
     SUBDIR += plasma6-plasma-workspace
+    SUBDIR += plasma6lts-kactivitymanagerd
+    SUBDIR += plasma6lts-kgamma
+    SUBDIR += plasma6lts-kglobalacceld
+    SUBDIR += plasma6lts-kscreen
+    SUBDIR += plasma6lts-kwayland
+    SUBDIR += plasma6lts-kwayland-integration
+    SUBDIR += plasma6lts-layer-shell-qt
+    SUBDIR += plasma6lts-libkscreen
+    SUBDIR += plasma6lts-libplasma
+    SUBDIR += plasma6lts-plasma
+    SUBDIR += plasma6lts-plasma-activities
+    SUBDIR += plasma6lts-plasma-activities-stats
+    SUBDIR += plasma6lts-plasma-desktop
+    SUBDIR += plasma6lts-plasma-integration
+    SUBDIR += plasma6lts-plasma-workspace
     SUBDIR += pmenu
     SUBDIR += polybar
     SUBDIR += printscreen
@@ -451,6 +467,7 @@
     SUBDIR += slurp
     SUBDIR += smproxy
     SUBDIR += somebar
+    SUBDIR += sonic-screen-library
     SUBDIR += sprop
     SUBDIR += squeekboard
     SUBDIR += srandrd

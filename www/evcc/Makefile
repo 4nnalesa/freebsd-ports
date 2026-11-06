@@ -1,5 +1,5 @@
 PORTNAME=	evcc
-DISTVERSION=	0.317.2
+DISTVERSION=	0.318.2
 CATEGORIES=	www
 MASTER_SITES=	LOCAL/mfechner/${PORTNAME}/:npmcache
 DISTFILES=	${PORTNAME}-npm-cache-${DISTVERSION}${EXTRACT_SUFX}:npmcache
@@ -25,7 +25,7 @@ BUILD_DEPENDS=	npm-node24>0:www/npm-node24
 USES=		gmake go:1.27+,modules,no_targets nodejs:24,build tar:zstd
 
 # Find here: https://github.com/evcc-io/evcc/releases
-_SHA=		ece5b74724dbf66487501731b528721edc99e341
+_SHA=		3674c1a5933000f3c646df876951e97391e2c5c1
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	evcc-io

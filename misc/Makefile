@@ -237,9 +237,6 @@
     SUBDIR += json-tui
     SUBDIR += kbdscan
     SUBDIR += kcd
-    SUBDIR += kde-thumbnailer-chm
-    SUBDIR += kde-thumbnailer-epub
-    SUBDIR += kde-thumbnailer-fb2
     SUBDIR += kdeedu
     SUBDIR += kdeedu-data
     SUBDIR += kdeutils
@@ -454,6 +451,7 @@
     SUBDIR += py-SQSnobFit
     SUBDIR += py-SimpleSoapy
     SUBDIR += py-SoapySDR
+    SUBDIR += py-a2a-sdk
     SUBDIR += py-accelerate
     SUBDIR += py-ag2
     SUBDIR += py-aistudio-sdk
@@ -543,7 +541,6 @@
     SUBDIR += py-instructor
     SUBDIR += py-ipyfastscape
     SUBDIR += py-jiwer
-    SUBDIR += py-kartograph
     SUBDIR += py-kenlm
     SUBDIR += py-kokoro
     SUBDIR += py-langchain

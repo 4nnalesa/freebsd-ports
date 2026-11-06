@@ -185,6 +185,7 @@
     SUBDIR += el-hyphen
     SUBDIR += elasticsearch-plugin-head
     SUBDIR += elasticsearch8
+    SUBDIR += elasticsearch94
     SUBDIR += en-aspell
     SUBDIR += en-hunspell
     SUBDIR += en-mythes
@@ -476,7 +477,6 @@
     SUBDIR += lua-icu-utils
     SUBDIR += lua-luaexpat
     SUBDIR += lua-lyaml
-    SUBDIR += lucene
     SUBDIR += lucene9
     SUBDIR += luceneplusplus
     SUBDIR += lv-aspell
@@ -1852,6 +1852,7 @@
     SUBDIR += py-youseedee
     SUBDIR += py-yte
     SUBDIR += py-zensical
+    SUBDIR += py-zensical-ui
     SUBDIR += py-zope.i18nmessageid
     SUBDIR += py-zpt
     SUBDIR += py-zxing-cpp
@@ -2295,6 +2296,7 @@
     SUBDIR += vbindiff
     SUBDIR += ve-hunspell
     SUBDIR += vgrep
+    SUBDIR += vss-text
     SUBDIR += wa-aspell
     SUBDIR += wa-hunspell
     SUBDIR += wdiff
@@ -2340,7 +2342,6 @@
     SUBDIR += xmlstarlet
     SUBDIR += xmlto
     SUBDIR += xmlwrapp
-    SUBDIR += xom
     SUBDIR += xorg-sgml-doctools
     SUBDIR += xql
     SUBDIR += xray

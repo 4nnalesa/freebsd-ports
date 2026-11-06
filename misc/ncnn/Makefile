@@ -1,5 +1,6 @@
 PORTNAME=	ncnn
 DISTVERSION=	20261020
+PORTREVISION=	1
 CATEGORIES=	misc # machine-learning
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -28,7 +29,7 @@ OPTIONS_DEFAULT=	VULKAN
 
 VULKAN_DESC=		Vulkan compute support
 VULKAN_BUILD_DEPENDS=	${LOCALBASE}/include/vulkan/vulkan.h:graphics/vulkan-headers \
-		glslangValidator:graphics/glslang
+			glslangValidator:graphics/glslang
 VULKAN_LIB_DEPENDS=	libvulkan.so:graphics/vulkan-loader
 VULKAN_CMAKE_BOOL=	NCNN_VULKAN
 

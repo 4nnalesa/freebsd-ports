@@ -30,6 +30,7 @@
     SUBDIR += R-cran-magick
     SUBDIR += R-cran-munsell
     SUBDIR += R-cran-pROC
+    SUBDIR += R-cran-patchwork
     SUBDIR += R-cran-pdftools
     SUBDIR += R-cran-pixmap
     SUBDIR += R-cran-plotrix
@@ -392,6 +393,7 @@
     SUBDIR += jasper
     SUBDIR += jave6
     SUBDIR += jbig2dec
+    SUBDIR += jbig2enc
     SUBDIR += jbigkit
     SUBDIR += jdraw
     SUBDIR += jgraph
@@ -871,6 +873,7 @@
     SUBDIR += plantuml
     SUBDIR += plasma-kmod
     SUBDIR += plasma6-spectacle
+    SUBDIR += plasma6lts-spectacle
     SUBDIR += plotutils
     SUBDIR += plutosvg
     SUBDIR += plutovg

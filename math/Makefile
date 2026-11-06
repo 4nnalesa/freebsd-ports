@@ -62,6 +62,7 @@
     SUBDIR += R-cran-dplyr
     SUBDIR += R-cran-eRm
     SUBDIR += R-cran-energy
+    SUBDIR += R-cran-epitools
     SUBDIR += R-cran-exactRankTests
     SUBDIR += R-cran-expm
     SUBDIR += R-cran-forcats
@@ -445,6 +446,7 @@
     SUBDIR += kfr
     SUBDIR += kig
     SUBDIR += kissat
+    SUBDIR += kissfft
     SUBDIR += kktdirect
     SUBDIR += kmplot
     SUBDIR += labplot
@@ -1050,6 +1052,7 @@
     SUBDIR += py-isosurfaces
     SUBDIR += py-jacobi
     SUBDIR += py-jax
+    SUBDIR += py-jaxlib
     SUBDIR += py-jij-cimod
     SUBDIR += py-kahip
     SUBDIR += py-keras
