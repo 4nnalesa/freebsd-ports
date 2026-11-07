@@ -1,0 +1,74 @@
+=======================================================================
+DeepSeek Harness (dsh) is installed.
+=======================================================================
+
+COMMAND LINE
+    dsh --help
+    dsh web
+    dsh --version
+
+    The launcher is %%PREFIX%%/bin/dsh. The runtime is a pnpm deploy
+    tree below %%PREFIX%%/lib/node_modules/deepseek-harness.
+
+WEB UI
+    dsh web listens on 127.0.0.1:3080 by default and prints a one-time
+    URL containing an access token. Open that URL directly:
+
+        http://127.0.0.1:3080/?token=<token>
+
+    From another machine, forward the port instead of exposing it:
+
+        ssh -L 3080:127.0.0.1:3080 <user>@<host>
+        # then open http://localhost:3080/
+
+    The /api browser-trust fence accepts loopback, the listener's own
+    bind address, and hosts named by --trusted-host. A reverse proxy on
+    a different authority must pass --trusted-host explicitly.
+
+ACCOUNT LOGIN
+    DeepSeek account OAuth only accepts a loopback HTTP browser origin.
+    Opening the UI as http://10.0.0.3:3080 therefore makes "Sign in"
+    fail before the authorization tab opens, even though normal API
+    calls are trusted. Use an SSH local forward and open the loopback
+    URL instead:
+
+        ssh -N -L 3080:10.0.0.3:3080 <user>@<host>
+        # then open http://127.0.0.1:3080/?token=<token>
+
+    An API key configured in Settings, or DEEPSEEK_API_KEY, does not
+    have this restriction. Account login is only needed for profile,
+    balance and bonus features.
+
+BOOT-TIME SERVICE
+    sysrc dsh_web_enable=YES
+    service dsh_web start
+
+    The rc script runs as www, keeps state in /var/db/dsh, and prints
+    the token URL after startup. Useful overrides:
+
+        sysrc dsh_web_user=someuser
+        sysrc dsh_web_chdir=/path/to/state
+        sysrc dsh_web_host=127.0.0.1
+        sysrc dsh_web_port=3080
+
+    Configuration, sessions and credentials live under DSH_HOME.
+
+SANDBOX
+    This port has no FreeBSD sandbox provider. The launcher therefore
+    defaults DSH_PERMISSION_MODE to danger-full-access; commands run
+    with the invoking user's authority. Set DSH_PERMISSION_MODE to
+    another value only after installing a compatible backend.
+
+RUNTIME DEPENDENCIES
+    node24, bash and ripgrep are installed automatically. The terminal
+    tool uses bash for its persistent PTY, and the search tools use the
+    system ripgrep rather than a bundled platform binary.
+
+OFFLINE BUILD
+    make fetch runs pnpm fetch and stores the dependency cache in an
+    extra distfile. Subsequent make build runs without registry access.
+    See %%PREFIX%%/share/doc/deepseek-harness/README.FreeBSD.
+
+UPSTREAM
+    https://github.com/deepseek-ai/deepseek-harness
+=======================================================================

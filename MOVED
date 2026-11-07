@@ -5800,3 +5800,4 @@ java/apache-commons-lang|java/apache-commons-lang3|2026-11-03|Has expired: Unpat
 mail/php80-mailparse||2026-11-04|No longer required in the cluster
 x11/plasma6-kgamma||2026-11-05|Removed: no longer shipped with KDE Plasma
 x11-wm/plasma6-kwin-x11||2026-11-05|Removed: no longer shipped with KDE Plasma
+devel/deepseek-harness|misc/deepseek-harness|2026-11-03|Moved to misc and rebuilt from the upstream source archive

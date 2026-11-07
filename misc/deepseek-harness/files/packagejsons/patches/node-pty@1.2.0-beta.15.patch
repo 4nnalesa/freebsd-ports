@@ -1,0 +1,63 @@
+diff --git a/src/unix/pty.cc b/src/unix/pty.cc
+index 3b7d3dc..4b8bff3 100644
+--- a/src/unix/pty.cc
++++ b/src/unix/pty.cc
+@@ -144,6 +144,13 @@ pty_close_inherited_fds() {
+     if (SetCloseOnExec(fd) && fd > 15)
+       break;
+ }
++#elif defined(__FreeBSD__)
++
++/* forkpty() leaves parent descriptors open; closefrom(3) is the native bulk close. */
++static void
++pty_close_inherited_fds() {
++  closefrom(3);
++}
+ #endif
+ 
+ void SetupExitCallback(Napi::Env env, Napi::Function cb, pid_t pid) {
+diff --git a/lib/unixTerminal.js b/lib/unixTerminal.js
+index af2d24c39deb60e77ad16e6b864f37a7ef58881c..2ece2590445dc1ecce167b8ba4710c3176d32a21 100644
+--- a/lib/unixTerminal.js
++++ b/lib/unixTerminal.js
+@@ -28,10 +28,23 @@ var terminal_1 = require("./terminal");
+ var utils_1 = require("./utils");
+ var native = (0, utils_1.loadNativeModule)('pty');
+ var pty = native.module;
+-var helperPath = native.dir + '/spawn-helper';
+-helperPath = path.resolve(__dirname, helperPath);
+-helperPath = helperPath.replace('app.asar', 'app.asar.unpacked');
+-helperPath = helperPath.replace('node_modules.asar', 'node_modules.asar.unpacked');
++// A current external embedded-runtime consumer supplies a non-sibling helper.
++var helperPath = process.env.DSH_NODE_PTY_SPAWN_HELPER;
++if (helperPath) {
++    helperPath = path.resolve(helperPath);
++}
++else {
++    var executableSibling = process.execPath + '-spawn-helper';
++    if (fs.existsSync(executableSibling)) {
++        helperPath = executableSibling;
++    }
++    else {
++        helperPath = native.dir + '/spawn-helper';
++        helperPath = path.resolve(__dirname, helperPath);
++        helperPath = helperPath.replace('app.asar', 'app.asar.unpacked');
++        helperPath = helperPath.replace('node_modules.asar', 'node_modules.asar.unpacked');
++    }
++}
+ var DEFAULT_FILE = 'sh';
+ var DEFAULT_NAME = 'xterm';
+ var DESTROY_SOCKET_TIMEOUT_MS = 200;
+diff --git a/lib/windowsPtyAgent.js b/lib/windowsPtyAgent.js
+index 90ffd8fb69764052b0714cfb2b1213c073603c28..399861d7bbd0fb733fa032e923efa8b6aab8e62b 100644
+--- a/lib/windowsPtyAgent.js
++++ b/lib/windowsPtyAgent.js
+@@ -207,6 +207,8 @@ var WindowsPtyAgent = /** @class */ (function () {
+             // Close the input write handle to signal the end of session.
+             this._inSocket.destroy();
+             this._ptyNative.kill(this._pty, this._useConptyDll);
++            // Start draining even when the exited process has no more output.
++            this._conoutSocketWorker.dispose();
+             this._outSocket.on('data', function () {
+                 _this._conoutSocketWorker.dispose();
+             });

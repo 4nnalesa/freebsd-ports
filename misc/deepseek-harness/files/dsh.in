@@ -1,0 +1,27 @@
+#!/bin/sh
+# Launcher for the DeepSeek Harness CLI installed by misc/deepseek-harness.
+#
+# The runtime lives in a pnpm deploy tree under the global Node package
+# directory. The CLI entry is nested there because @deepseek-ai/dsh is a
+# workspace dependency of the deploy root, not the root package itself.
+
+DSH_ROOT="%%PREFIX%%/lib/node_modules/deepseek-harness"
+DSH_ENTRY="${DSH_ROOT}/node_modules/@deepseek-ai/dsh/lib/bin.js"
+
+# FreeBSD has no upstream sandbox provider. Default to the only mode that
+# works here, while still letting the caller choose another value explicitly.
+DSH_PERMISSION_MODE="${DSH_PERMISSION_MODE:-danger-full-access}"
+export DSH_PERMISSION_MODE
+
+# The port's node24 dependency provides both node and npm; prefer the node
+# found on PATH and fall back to the package's absolute path.
+PATH="%%PREFIX%%/bin:%%PREFIX%%/sbin:${PATH}"
+export PATH
+NODE=node
+command -v node >/dev/null 2>&1 || NODE="%%PREFIX%%/bin/node"
+
+# node-addon-require-builtin does not publish a FreeBSD binding. The flag
+# exposes Node's internal ESM/CJS loader modules to the ordinary require()
+# path used by the patched profile resolver. It must be a CLI argument, not
+# an entry in NODE_OPTIONS.
+exec "${NODE}" --expose-internals "${DSH_ENTRY}" "$@"

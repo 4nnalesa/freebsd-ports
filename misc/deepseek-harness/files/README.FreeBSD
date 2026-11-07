@@ -1,0 +1,148 @@
+FreeBSD notes for misc/deepseek-harness 0.2.2-rc.1
+==================================================
+
+The port starts from the upstream source archive:
+
+  https://github.com/deepseek-ai/deepseek-harness/archive/refs/tags/dsh-v0.2.2-rc.1.tar.gz
+
+All FreeBSD changes are confined to files/:
+
+  patch-native_system_packages_entry_src_flock.ts
+      Teach the lazy flock entry that FreeBSD is a supported host.
+
+  patch-native_system_scripts_build.ts
+      Build the Node-API flock addon with the system C compiler. The
+      Landlock launcher is Linux-only and is not part of this port.
+
+  patch-packages_subprocess_subprocess-local_src_process-inspector.ts
+      Provide a ps(1) based inspector. FreeBSD calls the session keyword
+      "sid" and needs each -o keyword passed separately; its state field
+      can carry trailing flag letters.
+
+  patch-packages_terminal_terminal-bash_src_config.ts
+      Use /usr/local/bin/bash, the location installed by shells/bash.
+
+  patch-packages_fs_tool-fs-search_src_search-core.ts
+      Resolve the system ripgrep when no @vscode/ripgrep binary exists.
+      No FreeBSD binary is shipped by that package.
+
+  patch-packages_boot_app-boot_src_profile-resolution_resolver.ts
+      When --expose-internals is active, load Node's internal ESM/CJS
+      loader modules through require(). This avoids the unavailable
+      node-addon-require-builtin binding on FreeBSD.
+
+  freebsd-x64/
+      The @deepseek-ai/node-addon-system-freebsd-x64 workspace package:
+      package.json, prebuilds.json and a short README. post-extract copies
+      it into native/system/packages/freebsd-x64.
+
+  packagejsons/
+      Every workspace package.json, plus pnpm-workspace.yaml, pnpm-lock.yaml
+      and patches/. USES=npm:pnpm,fetch treats this directory as
+      PKGJSONSDIR. The manifests and lockfile also carry the FreeBSD-only
+      additions: the optional freebsd-x64 dependency of the native entry,
+      the freebsd-x64 workspace importer, and the node-pty patch.
+
+  fix-deploy-links.py
+      Copy the two link: vendor packages into the deploy tree, remove links
+      that escape it, and rename workspace virtual-store directories from
+      pkg@file++++<absolute build path> to pkg@file+workspace. Rewriting
+      those names is what keeps pkg-plist independent of WRKSRC.
+
+Dependency handling
+-------------------
+
+The workspace contains roughly 1,700 package entries. Fetching them during
+build would require network access and would run install scripts before the
+FreeBSD patches are applied. The port therefore uses:
+
+  USES=npm:pnpm,fetch
+  NPM_PREFETCH=yes
+  NPM_EXTRACT=no
+
+make fetch runs pnpm fetch against the manifests in files/packagejsons and
+archives the result as deepseek-harness-0.2.2-rc.1-node-modules-x64.tar.gz.
+make build restores the normalized store index with sqlite3, then runs
+pnpm install --offline --frozen-lockfile --trust-lockfile. No registry
+request is made during the build.
+
+do-build then emits the host libraries, client bundles and Web assets, and
+creates a production deploy from python/sdk-runtime. The deploy root is the
+upstream maintained "all host packages" closure. The Electron desktop bundle
+is intentionally skipped.
+
+The deploy keeps relative symlinks, so do-install copies node_modules with
+cp -R rather than dereferencing it. A minimal package.json is written at
+${PREFIX}/lib/node_modules/deepseek-harness, and ${PREFIX}/bin/dsh launches
+node_modules/@deepseek-ai/dsh/lib/bin.js.
+
+Native code
+-----------
+
+  node-pty        built by node-gyp with the system compiler and
+                  /usr/local/include/node; the patch adds closefrom(3).
+  flock addon     compiled from native/system/packages/entry/src/flock.c
+                  by native/system/scripts/build.ts.
+  koffi           uses the upstream @koromix/koffi-freebsd-x64 prebuilt
+                  binary; no other platform binary is installed.
+  ripgrep         @vscode/ripgrep has no FreeBSD binary. The patched
+                  resolver falls back to the ripgrep installed by
+                  textproc/ripgrep.
+  esbuild         build-only. devel/esbuild exists, but the workspace locks
+                  0.21.5, 0.25.12, 0.28.1 and 0.28.2; one system binary cannot
+                  serve every locked JavaScript API, so the platform packages
+                  stay confined to the build tree.
+
+The non-FreeBSD node-pty prebuilds are deleted from the deploy tree before
+installation. The only loadable native objects in the package are built on
+FreeBSD or are the FreeBSD koffi binary.
+
+Service and sandbox
+-------------------
+
+files/dsh_web.in is a conventional rc.subr script. It runs as www, keeps
+DSH_HOME in /var/db/dsh, writes the pidfile there, waits for the token line
+in the log, and uses the installed path for stop/status matching.
+dsh_web_env and dsh_web_env_file are handled by rc.subr itself.
+
+The port does not ship a sandbox backend. The launcher defaults
+DSH_PERMISSION_MODE to danger-full-access so the CLI and Web UI are usable;
+workspace-write remains available only when a compatible backend exists.
+
+Account sign-in
+---------------
+
+The DeepSeek account provider accepts only a loopback HTTP origin for the
+OAuth callback (RFC 8252 style). If the browser opens the UI at
+http://10.0.0.3:3080, startSignIn rejects that origin before opening the
+authorization page and the UI reports a failed login. The /api trust fence
+and --trusted-host do not change this account-specific rule.
+
+Use an SSH local forward and open the loopback URL:
+
+  ssh -N -L 3080:10.0.0.3:3080 <user>@<host>
+  # browser: http://127.0.0.1:3080/?token=<token>
+
+The Platform redirect then goes to 127.0.0.1:3080/oauth/callback on the
+client, through the tunnel to the waiting listener. An API key configured
+in Settings or supplied through DEEPSEEK_API_KEY avoids the loopback
+constraint and is sufficient for model use; account sign-in is needed only
+for profile, balance and bonus features.
+
+Verification
+------------
+
+Completed on FreeBSD 15.1 amd64 with Node 24:
+
+  dsh --version                0.2.2-rc.1
+  dsh --help                   identical to the source launcher
+  dsh web --help               installed wrapper matches the source entry;
+                               the source launcher needs the same
+                               --expose-internals flag to boot the host
+  dsh web                      token URL, HTTP 200 from the Web UI
+  dsh headless                 mock LLM turn completed; bash tool output
+                               and session files written under DSH_HOME
+  native flock                 second lock rejected with EAGAIN
+  process inspector            snapshot/tree/isAlive/session against ps(1)
+  package install              wrapper and native addons load from the
+                               installed lib/node_modules tree

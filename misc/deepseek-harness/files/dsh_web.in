@@ -1,0 +1,126 @@
+#!/bin/sh
+# PROVIDE: dsh_web
+# REQUIRE: LOGIN NETWORKING
+# KEYWORD: shutdown
+#
+# DeepSeek Harness Web UI service.
+#
+# Enable it in /etc/rc.conf or /etc/rc.conf.local:
+#
+#   dsh_web_enable="YES"
+#
+# Settings and defaults:
+#   dsh_web_user       (www)          account that owns the listener
+#   dsh_web_host       (127.0.0.1)    bind address; account OAuth still
+#                                     requires a loopback browser origin,
+#                                     so use an SSH forward for sign-in
+#                                     when binding a LAN address
+#   dsh_web_port       (3080)         TCP port
+#   dsh_web_chdir      (/var/db/dsh)  DSH_HOME and the default agent cwd
+#   dsh_web_env        (HOME, DSH_HOME, PATH)  environment for the service
+#   dsh_web_env_file   (unset)        shell file sourced by rc.subr first
+#   dsh_web_token_wait (120)          seconds to wait for the startup token
+#   dsh_web_log        (/var/log/dsh_web.log)
+#
+# The server writes a one-time token URL to its log. The start command waits
+# for that line and prints the complete URL. Configuration, sessions and
+# credentials all remain below DSH_HOME.
+
+. /etc/rc.subr
+
+name="dsh_web"
+rcvar="dsh_web_enable"
+
+load_rc_config $name
+
+: ${dsh_web_enable:="NO"}
+: ${dsh_web_user:="www"}
+: ${dsh_web_host:="127.0.0.1"}
+: ${dsh_web_port:="3080"}
+: ${dsh_web_chdir:="/var/db/dsh"}
+: ${dsh_web_token_wait:="120"}
+: ${dsh_web_log:="/var/log/dsh_web.log"}
+
+# The service account owns its state directory, so the pidfile must live
+# there; /var/run is root-owned and daemon -P would fail to create it.
+pidfile="${dsh_web_chdir}/dsh_web.pid"
+command="/usr/sbin/daemon"
+command_args="-P ${pidfile} -o ${dsh_web_log} %%PREFIX%%/bin/dsh web --host ${dsh_web_host} --port ${dsh_web_port} --no-open"
+
+# rc.subr changes user with su -m, which preserves the caller's environment.
+# Pin HOME and DSH_HOME so the service never inherits root's home; PATH must
+# include the local package prefix for bash, rg and node.
+: ${dsh_web_env:="HOME=${dsh_web_chdir} DSH_HOME=${dsh_web_chdir} PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin"}
+
+# Create the state directory and logfile as the service account before
+# daemon(8) opens the log and drops privileges.
+dsh_web_precmd() {
+    /usr/bin/install -d -o "${dsh_web_user}" -m 0750 "${dsh_web_chdir}"
+    if [ ! -f "${dsh_web_log}" ]; then
+        /usr/bin/install -o "${dsh_web_user}" -m 0640 /dev/null "${dsh_web_log}"
+    else
+        chown "${dsh_web_user}" "${dsh_web_log}" 2>/dev/null || true
+    fi
+    dsh_web_log_before=$(wc -l < "${dsh_web_log}" 2>/dev/null || echo 0)
+}
+
+# Stop the supervised pid first. The pattern-based fallback covers a stale or
+# missing pidfile, and the final loop waits for the port to be released so a
+# restart cannot race EADDRINUSE.
+dsh_web_stop() {
+    if [ -f "${pidfile}" ]; then
+        kill -TERM "$(cat "${pidfile}")" 2>/dev/null
+    fi
+    pkill -U "${dsh_web_user}" -f "[l]ib/node_modules/deepseek-harness" 2>/dev/null
+    local i
+    for i in $(seq 1 20); do
+        if sockstat -l -p "${dsh_web_port}" 2>/dev/null | grep -q ":${dsh_web_port}"; then
+            sleep 1
+        else
+            break
+        fi
+    done
+    rm -f "${pidfile}"
+}
+
+dsh_web_status() {
+    if sockstat -l -p "${dsh_web_port}" 2>/dev/null | grep -q ":${dsh_web_port}"; then
+        echo "dsh_web is RUNNING on ${dsh_web_host}:${dsh_web_port}"
+        pgrep -U "${dsh_web_user}" -f "[l]ib/node_modules/deepseek-harness" | while read p; do
+            echo "  pid $p"
+        done
+    else
+        echo "dsh_web is NOT running"
+        return 1
+    fi
+}
+
+# Scan only lines appended by this start, so a token from an earlier run is
+# never reported as the current one.
+dsh_web_wait_token() {
+    local i token start_line
+    start_line=$((dsh_web_log_before + 1))
+    for i in $(seq 1 "${dsh_web_token_wait}"); do
+        token=$(tail -n +"$start_line" "${dsh_web_log}" 2>/dev/null \
+            | grep -oE "token=[A-Za-z0-9_-]+" | tail -1 | cut -d= -f2-)
+        if [ -n "$token" ]; then
+            break
+        fi
+        sleep 1
+    done
+    if [ -n "$token" ]; then
+        echo ""
+        echo "dsh web is up."
+        echo "Open:  http://${dsh_web_host}:${dsh_web_port}/?token=${token}"
+        echo "Log:   tail -f ${dsh_web_log}"
+    else
+        echo "dsh web started, but the token line is not in ${dsh_web_log} yet"
+    fi
+}
+
+start_precmd="dsh_web_precmd"
+start_postcmd="dsh_web_wait_token"
+stop_cmd="dsh_web_stop"
+status_cmd="dsh_web_status"
+
+run_rc_command "$1"
