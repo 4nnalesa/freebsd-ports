@@ -1,0 +1,15 @@
+llvm-mingw is a cross compiler toolchain targeting Windows, built from
+LLVM/Clang, MinGW-w64 headers and runtime libraries, libc++ and
+compiler-rt.
+
+The toolchain supports the following Windows targets:
+
+  i686-w64-mingw32
+  x86_64-w64-mingw32
+  aarch64-w64-mingw32
+  armv7-w64-mingw32
+
+Unlike the upstream release builds, this port does not build its own
+copy of LLVM.  It uses the clang, lld and LLVM binary utilities from
+devel/llvm23 and only builds the MinGW-w64 sysroots and the C/C++
+runtime libraries for the Windows targets.

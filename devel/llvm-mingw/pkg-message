@@ -1,0 +1,25 @@
+[
+{
+  type: install
+  message: <<EOM
+========================================================================
+
+llvm-mingw has been installed in %%PREFIX%%/llvm-mingw.
+
+To use the cross compiler, add its bin directory to PATH:
+
+  export PATH=%%PREFIX%%/llvm-mingw/bin:$PATH
+
+Then compile, for example:
+
+  x86_64-w64-mingw32-clang hello.c -o hello.exe
+  x86_64-w64-mingw32-clang++ hello.cc -o hello.exe
+
+The compiler also accepts the --target= option directly:
+
+  clang --target=aarch64-w64-mingw32 hello.c -o hello.exe
+
+========================================================================
+EOM
+}
+]

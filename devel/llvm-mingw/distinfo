@@ -1,0 +1,7 @@
+TIMESTAMP = 1794144573
+SHA256 (mstorsjo-llvm-mingw-20261104_GH0.tar.gz) = 1d3b9f851a5f83b5f52c43c168b0bd325f39728cd7b8fe1db33bb480a1bfc983
+SIZE (mstorsjo-llvm-mingw-20261104_GH0.tar.gz) = 71045
+SHA256 (llvm-llvm-project-llvmorg-23.1.5_GH0.tar.gz) = 70642a7e44e63c0ceff6624e5fd077b87766e4ed0bcd4a3ea8e3ffa3827ba538
+SIZE (llvm-llvm-project-llvmorg-23.1.5_GH0.tar.gz) = 277538868
+SHA256 (mingw-w64-mingw-w64-ee9bd87644156c41072a11ad957d1e11831a72df_GH0.tar.gz) = 6a346a2e3eafa0e5ec8e30df89b16a05add8b50cb4cece8c47593799ca19e43b
+SIZE (mingw-w64-mingw-w64-ee9bd87644156c41072a11ad957d1e11831a72df_GH0.tar.gz) = 15862707
