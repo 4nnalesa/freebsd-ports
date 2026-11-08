@@ -5062,7 +5062,10 @@
 %%DATADIR%%/x86_64-w64-mingw32/share/mingw32/COPYING
 %%DATADIR%%/x86_64-w64-mingw32/share/mingw32/COPYING.MinGW-w64-runtime.txt
 %%DATADIR%%/x86_64-w64-mingw32/share/mingw32/COPYING.MinGW-w64.txt
+bin/aarch64-w64-mingw32-widl
+bin/armv7-w64-mingw32-widl
 bin/gendef
 bin/i686-w64-mingw32-widl
+bin/x86_64-w64-mingw32-widl
 share/gendef/COPYING.txt
 share/widl/COPYING.txt

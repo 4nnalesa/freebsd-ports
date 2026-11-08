@@ -82,6 +82,11 @@ do-install:
 		${INSTALL_PROGRAM} $$f ${STAGEDIR}${PREFIX}/bin/; \
 	done
 	@for arch in ${MINGW_TARGETS}; do \
+		[ "$$arch" = i686 ] || \
+			${LN} -sf i686-w64-mingw32-widl \
+				${STAGEDIR}${PREFIX}/bin/$$arch-w64-mingw32-widl; \
+	done
+	@for arch in ${MINGW_TARGETS}; do \
 		${MKDIR} ${STAGEDIR}${MINGW_SYSROOT}/$$arch-w64-mingw32/share/mingw32; \
 		${INSTALL_DATA} ${WRKSRC}/COPYING \
 			${STAGEDIR}${MINGW_SYSROOT}/$$arch-w64-mingw32/share/mingw32/; \
