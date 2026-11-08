@@ -1,0 +1,5 @@
+#!/bin/sh
+exec %%LLVM_PREFIX%%/bin/clang \
+	-resource-dir=%%PREFIX%%/share/mingw-w64/lib/clang/23 \
+	--sysroot=%%PREFIX%%/share/mingw-w64 \
+	--config-system-dir=%%PREFIX%%/llvm-mingw/bin "$@"
