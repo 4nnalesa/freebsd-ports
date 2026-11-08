@@ -5,8 +5,8 @@ DISTNAME=	${PORTNAME}-dsh-v${DISTVERSION}
 DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
 MASTER_SITES=	https://github.com/deepseek-ai/deepseek-harness/archive/refs/tags/dsh-v${DISTVERSION}/
 
-MAINTAINER=	4nnalesa
-COMMENT=	DeepSeek open-source agent harness (CLI and Web UI)
+MAINTAINER=	4nnalesa@gmail.com
+COMMENT=	an open-source agent harness developed by DeepSeek AI
 WWW=		https://github.com/deepseek-ai/deepseek-harness
 
 LICENSE=	MIT
@@ -38,9 +38,13 @@ BUILD_DEPENDS=	sqlite3:databases/sqlite3
 
 # node-gyp must use the headers installed by www/node24. The client build
 # embeds the release commit and version because the source tarball has no
-# .git directory from which to derive them.
+# .git directory from which to derive them. In a clean build jail node-gyp
+# may not find python3 through PATH, so pass the python:build interpreter
+# explicitly.
 MAKE_ENV+=	npm_config_nodedir=${LOCALBASE} \
 		CI=1 \
+		PYTHON=${PYTHON_CMD} \
+		npm_config_python=${PYTHON_CMD} \
 		DSH_CLIENT_COMMIT_HASH=66491b0 \
 		DSH_CLIENT_VERSION=${DISTVERSION}
 
