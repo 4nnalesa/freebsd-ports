@@ -1,0 +1,7 @@
+MinGW-w64 is a free and open source software development environment for
+creating 64-bit and 32-bit Windows applications.
+
+This port installs the Windows API headers, import libraries, C runtime
+startup objects and the related host tools (widl and gendef) for the
+i686, x86_64, aarch64 and armv7 Windows targets.  The files are installed
+as a sysroot in share/mingw-w64 under the local prefix.
