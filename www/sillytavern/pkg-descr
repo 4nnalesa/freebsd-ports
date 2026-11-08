@@ -1,0 +1,4 @@
+SillyTavern is a locally installed web frontend for chatting with LLM APIs
+(OpenAI, Claude, Google, local models, and others). It runs as a Node.js
+server and stores characters, chats, presets, and settings under a separate
+data directory.

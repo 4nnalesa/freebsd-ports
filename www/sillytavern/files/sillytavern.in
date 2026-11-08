@@ -1,0 +1,114 @@
+#!/bin/sh
+#
+# $FreeBSD$
+#
+# PROVIDE: sillytavern
+# REQUIRE: NETWORKING
+# KEYWORD: shutdown
+#
+# SillyTavern web frontend. Configuration lives in %%ETCDIR%%/config.yaml,
+# user data in /var/db/sillytavern, and the service log in
+# /var/log/sillytavern.log.
+
+. /etc/rc.subr
+
+name="sillytavern"
+rcvar="sillytavern_enable"
+
+load_rc_config $name
+
+: ${sillytavern_enable:="NO"}
+: ${sillytavern_user:="www"}
+: ${sillytavern_group:="www"}
+: ${sillytavern_node:="%%LOCALBASE%%/bin/node"}
+: ${sillytavern_dir:="%%WWWDIR%%"}
+: ${sillytavern_config:="%%ETCDIR%%/config.yaml"}
+: ${sillytavern_datadir:="/var/db/sillytavern"}
+: ${sillytavern_log:="/var/log/sillytavern.log"}
+: ${sillytavern_port:="8000"}
+: ${sillytavern_flags:=""}
+
+pidfile="${sillytavern_datadir}/${name}.pid"
+command="/usr/sbin/daemon"
+command_args="-P ${pidfile} -o ${sillytavern_log} ${sillytavern_node} ${sillytavern_dir}/server.js --configPath ${sillytavern_config} --dataRoot ${sillytavern_datadir} ${sillytavern_flags}"
+
+# rc.subr starts the daemon as ${sillytavern_user} through su(1), so the
+# pidfile and data directory must belong to that account. The server also
+# uses relative paths below its working directory (backups/, plugins/), so
+# keep the checked-out application directory as the cwd.
+sillytavern_chdir="${sillytavern_dir}"
+sillytavern_env="NODE_ENV=production HOME=${sillytavern_datadir} PATH=%%LOCALBASE%%/bin:/usr/bin:/bin"
+
+sillytavern_port_listening() {
+	sockstat -4l -p "${sillytavern_port}" 2>/dev/null | grep -q ":${sillytavern_port}"
+}
+
+sillytavern_precmd() {
+	[ -x "${sillytavern_node}" ] \
+		|| err 1 "${sillytavern_node} not found; install www/node24"
+	[ -f "${sillytavern_dir}/server.js" ] \
+		|| err 1 "${sillytavern_dir}/server.js not found"
+	[ -f "${sillytavern_config}" ] \
+		|| err 1 "${sillytavern_config} not found; reinstall www/sillytavern"
+	install -d -o "${sillytavern_user}" -g "${sillytavern_group}" -m 0750 \
+		"${sillytavern_datadir}"
+	if [ -f "${sillytavern_log}" ]; then
+		/usr/sbin/chown "${sillytavern_user}:${sillytavern_group}" "${sillytavern_log}"
+	else
+		install -o "${sillytavern_user}" -g "${sillytavern_group}" -m 0640 \
+			/dev/null "${sillytavern_log}"
+	fi
+}
+
+sillytavern_start_postcmd() {
+	local i ip
+	for i in $(seq 1 30); do
+		sillytavern_port_listening && break
+		sleep 1
+	done
+	if sillytavern_port_listening; then
+		ip=$(/sbin/ifconfig -a 2>/dev/null \
+			| awk '$1 == "inet" && $2 !~ /^127\./ { print $2; exit }')
+		echo ""
+		echo "SillyTavern is up."
+		echo "Open:  http://127.0.0.1:${sillytavern_port}/"
+		[ -n "${ip}" ] && echo "       http://${ip}:${sillytavern_port}/"
+		echo "Log:   tail -f ${sillytavern_log}"
+	else
+		echo "SillyTavern started, but port ${sillytavern_port} is not listening yet."
+		echo "Check ${sillytavern_log} for startup errors."
+	fi
+}
+
+sillytavern_stop() {
+	if [ -f "${pidfile}" ]; then
+		kill -TERM "$(cat "${pidfile}")" 2>/dev/null
+	fi
+	pkill -f "[s]illytavern/server.js" 2>/dev/null
+
+	local i
+	for i in $(seq 1 20); do
+		sillytavern_port_listening || break
+		sleep 1
+	done
+	rm -f "${pidfile}"
+}
+
+sillytavern_status() {
+	if sillytavern_port_listening; then
+		echo "sillytavern is RUNNING on port ${sillytavern_port}"
+		pgrep -f "[s]illytavern/server.js" | while read -r p; do
+			echo "  pid $p"
+		done
+	else
+		echo "sillytavern is NOT running"
+		return 1
+	fi
+}
+
+start_precmd="sillytavern_precmd"
+start_postcmd="sillytavern_start_postcmd"
+stop_cmd="sillytavern_stop"
+status_cmd="sillytavern_status"
+
+run_rc_command "$1"

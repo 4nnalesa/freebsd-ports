@@ -1,0 +1,19 @@
+SillyTavern has been installed in %%WWWDIR%%.
+
+Enable and start the service:
+
+    sysrc sillytavern_enable=YES
+    service sillytavern start
+
+The default configuration listens on 127.0.0.1:8000 only. To allow clients
+from your network, set "listen: true" in %%ETCDIR%%/config.yaml and add the
+client address or subnet to the "whitelist" list, then restart the service:
+
+    service sillytavern restart
+
+Configuration: %%ETCDIR%%/config.yaml
+User data:     /var/db/sillytavern
+Service log:   /var/log/sillytavern.log
+
+Extra command line options can be passed through sillytavern_flags in
+/etc/rc.conf.
