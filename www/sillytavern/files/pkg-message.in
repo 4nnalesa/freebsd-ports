@@ -1,19 +1,62 @@
 SillyTavern has been installed in %%WWWDIR%%.
 
-Enable and start the service:
+Quick start
+===========
+
+Enable the service at boot and start it now:
 
     sysrc sillytavern_enable=YES
     service sillytavern start
 
-The default configuration listens on 127.0.0.1:8000 only. To allow clients
-from your network, set "listen: true" in %%ETCDIR%%/config.yaml and add the
-client address or subnet to the "whitelist" list, then restart the service:
+Then open:
 
-    service sillytavern restart
+    http://127.0.0.1:8000/
 
-Configuration: %%ETCDIR%%/config.yaml
-User data:     /var/db/sillytavern
-Service log:   /var/log/sillytavern.log
+The first start copies the bundled default content (characters, themes,
+presets) into the data directory and can take a few seconds.
 
-Extra command line options can be passed through sillytavern_flags in
+Configuration and data
+======================
+
+The main configuration file is %%ETCDIR%%/config.yaml. It is created from
+config.yaml.sample during installation and is left untouched by package
+upgrades. It controls the port, listen address, IP whitelist, SSL,
+authentication and other server options.
+
+Characters, chats, presets, uploads and backups are stored separately in
+/var/db/sillytavern, so upgrading or reinstalling the port does not remove
+user data.
+
+Logs
+====
+
+    /var/log/sillytavern.log            service output
+    /var/db/sillytavern/access.log      HTTP access log
+
+Network access
+==============
+
+The default configuration listens on 127.0.0.1 only. To let other machines
+connect, set "listen: true" in %%ETCDIR%%/config.yaml and add their
+addresses or subnets to "whitelist" (by default only 127.0.0.1 and ::1 are
+allowed), then restart the service.
+
+For remote access without opening the port, use an SSH tunnel:
+
+    ssh -L 8000:127.0.0.1:8000 user@this-host
+
+Service management
+==================
+
+    service sillytavern start|stop|restart|status
+    tail -f /var/log/sillytavern.log
+
+Additional command line options can be passed through sillytavern_flags in
 /etc/rc.conf.
+
+Updating
+========
+
+The application files in %%WWWDIR%% are managed by pkg. Rebuild the port or
+use pkg upgrade to update them; %%ETCDIR%%/config.yaml and
+/var/db/sillytavern are preserved.

@@ -9,6 +9,11 @@
 # SillyTavern web frontend. Configuration lives in %%ETCDIR%%/config.yaml,
 # user data in /var/db/sillytavern, and the service log in
 # /var/log/sillytavern.log.
+#
+# The listen address comes from config.yaml, exactly like the upstream
+# start.sh. The shipped config has "listen: false", so the default is
+# 127.0.0.1 only. To expose the service, change listen/listenAddress and
+# the whitelist in config.yaml; the rc script does not override them.
 
 . /etc/rc.subr
 
@@ -35,7 +40,7 @@ command_args="-P ${pidfile} -o ${sillytavern_log} ${sillytavern_node} ${sillytav
 # rc.subr starts the daemon as ${sillytavern_user} through su(1), so the
 # pidfile and data directory must belong to that account. The server also
 # uses relative paths below its working directory (backups/, plugins/), so
-# keep the checked-out application directory as the cwd.
+# keep the application directory as the cwd.
 sillytavern_chdir="${sillytavern_dir}"
 sillytavern_env="NODE_ENV=production HOME=${sillytavern_datadir} PATH=%%LOCALBASE%%/bin:/usr/bin:/bin"
 
@@ -61,18 +66,15 @@ sillytavern_precmd() {
 }
 
 sillytavern_start_postcmd() {
-	local i ip
+	local i
 	for i in $(seq 1 30); do
 		sillytavern_port_listening && break
 		sleep 1
 	done
 	if sillytavern_port_listening; then
-		ip=$(/sbin/ifconfig -a 2>/dev/null \
-			| awk '$1 == "inet" && $2 !~ /^127\./ { print $2; exit }')
 		echo ""
 		echo "SillyTavern is up."
 		echo "Open:  http://127.0.0.1:${sillytavern_port}/"
-		[ -n "${ip}" ] && echo "       http://${ip}:${sillytavern_port}/"
 		echo "Log:   tail -f ${sillytavern_log}"
 	else
 		echo "SillyTavern started, but port ${sillytavern_port} is not listening yet."

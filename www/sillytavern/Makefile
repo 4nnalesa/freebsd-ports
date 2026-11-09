@@ -1,16 +1,6 @@
 PORTNAME=	sillytavern
 DISTVERSION=	1.19.0
 CATEGORIES=	www
-# GitHub's web frontend is unreachable from some networks, but codeload is
-# not; fetch the tag archive directly and unpack it into the repo's own
-# top-level directory.
-MASTER_SITES=	https://codeload.github.com/SillyTavern/SillyTavern/tar.gz/refs/tags/
-# codeload serves the archive from a URL with no filename suffix, so fetch
-# it as ${DISTVERSION} and let EXTRACT_SUFX (.tar.gz) drive extraction. The
-# archive unpacks into the repository's own SillyTavern-<version> directory.
-DISTFILES=	${DISTVERSION}
-DIST_SUBDIR=	${PORTNAME}
-WRKSRC=		${WRKDIR}/SillyTavern-${DISTVERSION}
 
 MAINTAINER=	4nnalesa@gmail.com
 COMMENT=	Web frontend for chatting with LLM APIs
@@ -20,6 +10,10 @@ LICENSE=	AGPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=		nodejs:24,run npm:npm,fetch
+USE_GITHUB=	yes
+GH_ACCOUNT=	SillyTavern
+GH_PROJECT=	SillyTavern
+GH_TAGNAME=	${DISTVERSION}
 USE_RC_SUBR=	sillytavern
 SUB_FILES=	pkg-message
 

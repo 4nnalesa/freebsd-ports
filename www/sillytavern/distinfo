@@ -1,5 +1,5 @@
-TIMESTAMP = 1794139229
-SHA256 (sillytavern/1.19.0) = 80fcf77ff76c064cff950582fea70dd38c9acb0ef253fcba552676593edcbfee
-SIZE (sillytavern/1.19.0) = 38080517
-SHA256 (sillytavern/sillytavern-1.19.0-node-modules.tar.gz) = 534013897a661a1c467def159e6b956c168e7c634c63ee456247ebe2dbdb9548
-SIZE (sillytavern/sillytavern-1.19.0-node-modules.tar.gz) = 88852857
+TIMESTAMP = 1794148307
+SHA256 (sillytavern-1.19.0-node-modules.tar.gz) = 534013897a661a1c467def159e6b956c168e7c634c63ee456247ebe2dbdb9548
+SIZE (sillytavern-1.19.0-node-modules.tar.gz) = 88852857
+SHA256 (SillyTavern-SillyTavern-1.19.0_GH0.tar.gz) = 80fcf77ff76c064cff950582fea70dd38c9acb0ef253fcba552676593edcbfee
+SIZE (SillyTavern-SillyTavern-1.19.0_GH0.tar.gz) = 38080517
