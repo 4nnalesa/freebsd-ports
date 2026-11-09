@@ -1,0 +1,6 @@
+Compiler-rt builtins for the i686, x86_64, aarch64 and armv7 MinGW-w64
+Windows targets.
+
+The libraries are installed into the shared MinGW-w64 sysroot below
+share/mingw-w64 so that they are found by the clang driver through the
+llvm-mingw wrapper scripts.
