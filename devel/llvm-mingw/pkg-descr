@@ -12,8 +12,9 @@ Benefits of a LLVM based MinGW toolchain are:
 - Support for Address Sanitizer and Undefined Behaviour Sanitizer
 - Support for Control Flow Guard (-mguard=cf)
 
-This port installs the llvm-mingw wrappers and the LLVM runtime
-libraries (compiler-rt, libc++, libc++abi, libunwind and libomp) for the
-Windows targets.  The Windows headers, CRT and host tools are provided by
-devel/mingw-w64, and the compiler, linker and binary utilities come from
-devel/llvm23.
+This port installs the llvm-mingw wrappers and the LLVM C++ runtime
+libraries (libc++, libc++abi and libunwind) and libomp for the Windows
+targets.  The Windows headers and CRT are provided by devel/mingw-w64,
+the compiler-rt builtins by devel/mingw-w64-compiler-rt23, winpthreads by
+devel/mingw-w64-winpthreads, and the compiler, linker and binary
+utilities by devel/llvm23.

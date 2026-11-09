@@ -6,31 +6,30 @@ MAINTAINER=	4nnalesa@gmail.com
 COMMENT=	LLVM/Clang/LLD based mingw-w64 toolchain
 WWW=		https://github.com/mstorsjo/llvm-mingw
 
-LICENSE=	ISCL LLVM2 MIT
+LICENSE=	ISCL LLVM2
 LICENSE_COMB=	multi
 LICENSE_NAME_LLVM2=	Apache License 2.0 with LLVM Exceptions
 LICENSE_FILE_LLVM2=	${WRKSRC}/llvm-project/llvm/LICENSE.TXT
 LICENSE_FILE_ISCL=	${WRKSRC}/LICENSE.txt
-LICENSE_FILE_MIT=	${WRKSRC}/mingw-w64/mingw-w64-libraries/winpthreads/COPYING
 LICENSE_PERMS_LLVM2=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 
-BUILD_DEPENDS=	${LOCALBASE}/share/mingw-w64/generic-w64-mingw32/include/windows.h:devel/mingw-w64
-RUN_DEPENDS=	${LOCALBASE}/share/mingw-w64/generic-w64-mingw32/include/windows.h:devel/mingw-w64
+BUILD_DEPENDS=	${LOCALBASE}/share/mingw-w64/generic-w64-mingw32/include/windows.h:devel/mingw-w64 \
+		${LOCALBASE}/share/mingw-w64/lib/clang/23/lib/windows/libclang_rt.builtins-x86_64.a:devel/mingw-w64-compiler-rt23 \
+		${LOCALBASE}/share/mingw-w64/x86_64-w64-mingw32/lib/libwinpthread.a:devel/mingw-w64-winpthreads
+RUN_DEPENDS=	${LOCALBASE}/share/mingw-w64/generic-w64-mingw32/include/windows.h:devel/mingw-w64 \
+		${LOCALBASE}/share/mingw-w64/lib/clang/23/lib/windows/libclang_rt.builtins-x86_64.a:devel/mingw-w64-compiler-rt23 \
+		${LOCALBASE}/share/mingw-w64/x86_64-w64-mingw32/lib/libwinpthread.a:devel/mingw-w64-winpthreads
 
 USES=		cmake:indirect gmake llvm:23,build,run ninja:build
 
-# LLVM release and mingw-w64 revision pinned by upstream build-llvm.sh and
-# build-mingw-w64.sh respectively.  The mingw-w64 source is only used here
-# for the winpthreads and winstorecompat runtime libraries; the headers and
-# CRT come from devel/mingw-w64.
+# LLVM release pinned by the upstream llvm-mingw build-llvm.sh script.
 LLVM_TAG=	llvmorg-23.1.5
-MINGW_W64_REV=	ee9bd87644156c41072a11ad957d1e11831a72df
 
 USE_GITHUB=	yes
-GH_ACCOUNT=	mstorsjo llvm:llvm mingw-w64:mingw
-GH_PROJECT=	${PORTNAME} llvm-project:llvm mingw-w64:mingw
-GH_TAGNAME=	${DISTVERSION} ${LLVM_TAG}:llvm ${MINGW_W64_REV}:mingw
-GH_SUBDIR=	llvm-project:llvm mingw-w64:mingw
+GH_ACCOUNT=	mstorsjo llvm:llvm
+GH_PROJECT=	${PORTNAME} llvm-project:llvm
+GH_TAGNAME=	${DISTVERSION} ${LLVM_TAG}:llvm
+GH_SUBDIR=	llvm-project:llvm
 
 MINGW_TARGETS=	i686 x86_64 aarch64 armv7
 MINGW_ROOT=	${WRKDIR}/root
@@ -63,9 +62,6 @@ do-build:
 	@${ECHO_MSG} "===> Building libc++, libc++abi and libunwind"
 	@cd ${WRKSRC} && ${MINGW_ENV} \
 		./build-libcxx.sh ${MINGW_ROOT}
-	@${ECHO_MSG} "===> Building winpthreads and winstorecompat"
-	@cd ${WRKSRC} && ${MINGW_ENV} lt_cv_prog_gnu_ld=yes \
-		./build-mingw-w64-libraries.sh ${MINGW_ROOT}
 	@${ECHO_MSG} "===> Building compiler-rt sanitizers"
 	@cd ${WRKSRC} && ${MINGW_ENV} \
 		./build-compiler-rt.sh ${MINGW_ROOT} --build-sanitizers
