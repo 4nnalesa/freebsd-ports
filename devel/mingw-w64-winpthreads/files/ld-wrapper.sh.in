@@ -1,0 +1,9 @@
+#!/bin/sh
+case "$1" in
+--help)
+	@LLVM_BIN@/ld.lld -m @MACHINE@ --help
+	echo "  --enable-auto-import       Import symbols from DLLs"
+	exit 0
+	;;
+esac
+exec @LLVM_BIN@/ld.lld -m @MACHINE@ "$@"
