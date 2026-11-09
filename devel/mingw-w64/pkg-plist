@@ -1,4 +1,5 @@
 %%DATADIR%%/aarch64-w64-mingw32/include
+%%DATADIR%%/aarch64-w64-mingw32/lib/CRT_fp8.o
 %%DATADIR%%/aarch64-w64-mingw32/lib/CRT_glob.o
 %%DATADIR%%/aarch64-w64-mingw32/lib/CRT_noglob.o
 %%DATADIR%%/aarch64-w64-mingw32/lib/binmode.o
@@ -14,7 +15,6 @@
 %%DATADIR%%/aarch64-w64-mingw32/lib/gcrt1.o
 %%DATADIR%%/aarch64-w64-mingw32/lib/gcrt2.o
 %%DATADIR%%/aarch64-w64-mingw32/lib/libacledit.a
-%%DATADIR%%/aarch64-w64-mingw32/lib/libaclui.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libactiveds.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libadsiid.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libadvapi32.a
@@ -184,6 +184,7 @@
 %%DATADIR%%/aarch64-w64-mingw32/lib/libksguid.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libksuser.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libktmw32.a
+%%DATADIR%%/aarch64-w64-mingw32/lib/liblargeint.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/liblinkinfo.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libloadperf.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/liblocationapi.a
@@ -299,7 +300,6 @@
 %%DATADIR%%/aarch64-w64-mingw32/lib/libqutil.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libqwave.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/librasadhlp.a
-%%DATADIR%%/aarch64-w64-mingw32/lib/librasapi32.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/librasauto.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libraschap.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/librasctrs.a
@@ -341,7 +341,6 @@
 %%DATADIR%%/aarch64-w64-mingw32/lib/libserialui.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libserwvdrv.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libsetupapi.a
-%%DATADIR%%/aarch64-w64-mingw32/lib/libsfc.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libshcore.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libshell32.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libshfolder.a
@@ -372,7 +371,6 @@
 %%DATADIR%%/aarch64-w64-mingw32/lib/libtsbyuv.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libtxfw32.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libucrt.a
-%%DATADIR%%/aarch64-w64-mingw32/lib/libucrt_vcruntime140.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libucrtapp.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libucrtbase.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libucrtbased.a
@@ -391,9 +389,6 @@
 %%DATADIR%%/aarch64-w64-mingw32/lib/libuxtheme.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libvcruntime140.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libvcruntime140_app.a
-%%DATADIR%%/aarch64-w64-mingw32/lib/libvcruntime140_threads.a
-%%DATADIR%%/aarch64-w64-mingw32/lib/libvcruntime140_threads_app.a
-%%DATADIR%%/aarch64-w64-mingw32/lib/libvcruntime140_threadsd.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libvcruntime140d.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libversion.a
 %%DATADIR%%/aarch64-w64-mingw32/lib/libvfw32.a
@@ -460,6 +455,7 @@
 %%DATADIR%%/aarch64-w64-mingw32/share/mingw32/COPYING.MinGW-w64-runtime.txt
 %%DATADIR%%/aarch64-w64-mingw32/share/mingw32/COPYING.MinGW-w64.txt
 %%DATADIR%%/armv7-w64-mingw32/include
+%%DATADIR%%/armv7-w64-mingw32/lib/CRT_fp8.o
 %%DATADIR%%/armv7-w64-mingw32/lib/CRT_glob.o
 %%DATADIR%%/armv7-w64-mingw32/lib/CRT_noglob.o
 %%DATADIR%%/armv7-w64-mingw32/lib/binmode.o
@@ -845,6 +841,7 @@
 %%DATADIR%%/armv7-w64-mingw32/lib/libktmw32.a
 %%DATADIR%%/armv7-w64-mingw32/lib/libl2gpstore.a
 %%DATADIR%%/armv7-w64-mingw32/lib/liblangcleanupsysprepaction.a
+%%DATADIR%%/armv7-w64-mingw32/lib/liblargeint.a
 %%DATADIR%%/armv7-w64-mingw32/lib/liblinkinfo.a
 %%DATADIR%%/armv7-w64-mingw32/lib/liblistsvc.a
 %%DATADIR%%/armv7-w64-mingw32/lib/liblivessp.a
@@ -1342,7 +1339,6 @@
 %%DATADIR%%/armv7-w64-mingw32/lib/libtxfw32.a
 %%DATADIR%%/armv7-w64-mingw32/lib/libubpm.a
 %%DATADIR%%/armv7-w64-mingw32/lib/libucrt.a
-%%DATADIR%%/armv7-w64-mingw32/lib/libucrt_vcruntime140.a
 %%DATADIR%%/armv7-w64-mingw32/lib/libucrtapp.a
 %%DATADIR%%/armv7-w64-mingw32/lib/libucrtbase.a
 %%DATADIR%%/armv7-w64-mingw32/lib/libucrtbased.a
@@ -1580,7 +1576,6 @@
 %%DATADIR%%/generic-w64-mingw32/include/_dbdao.h
 %%DATADIR%%/generic-w64-mingw32/include/_mingw.h
 %%DATADIR%%/generic-w64-mingw32/include/_mingw_dxhelper.h
-%%DATADIR%%/generic-w64-mingw32/include/_mingw_locale.h
 %%DATADIR%%/generic-w64-mingw32/include/_mingw_mac.h
 %%DATADIR%%/generic-w64-mingw32/include/_mingw_off_t.h
 %%DATADIR%%/generic-w64-mingw32/include/_mingw_secapi.h
@@ -1799,19 +1794,11 @@
 %%DATADIR%%/generic-w64-mingw32/include/control.idl
 %%DATADIR%%/generic-w64-mingw32/include/cor.h
 %%DATADIR%%/generic-w64-mingw32/include/corecrt.h
-%%DATADIR%%/generic-w64-mingw32/include/corecrt_malloc.h
-%%DATADIR%%/generic-w64-mingw32/include/corecrt_memory.h
 %%DATADIR%%/generic-w64-mingw32/include/corecrt_startup.h
 %%DATADIR%%/generic-w64-mingw32/include/corecrt_stdio_config.h
 %%DATADIR%%/generic-w64-mingw32/include/corecrt_wconio.h
 %%DATADIR%%/generic-w64-mingw32/include/corecrt_wctype.h
-%%DATADIR%%/generic-w64-mingw32/include/corecrt_wdirect.h
-%%DATADIR%%/generic-w64-mingw32/include/corecrt_wio.h
-%%DATADIR%%/generic-w64-mingw32/include/corecrt_wprocess.h
-%%DATADIR%%/generic-w64-mingw32/include/corecrt_wstdio.h
 %%DATADIR%%/generic-w64-mingw32/include/corecrt_wstdlib.h
-%%DATADIR%%/generic-w64-mingw32/include/corecrt_wstring.h
-%%DATADIR%%/generic-w64-mingw32/include/corecrt_wtime.h
 %%DATADIR%%/generic-w64-mingw32/include/corerror.h
 %%DATADIR%%/generic-w64-mingw32/include/corhdr.h
 %%DATADIR%%/generic-w64-mingw32/include/correg.h
@@ -1854,7 +1841,6 @@
 %%DATADIR%%/generic-w64-mingw32/include/d3d10_1.h
 %%DATADIR%%/generic-w64-mingw32/include/d3d10_1.idl
 %%DATADIR%%/generic-w64-mingw32/include/d3d10_1shader.h
-%%DATADIR%%/generic-w64-mingw32/include/d3d10_1shader.idl
 %%DATADIR%%/generic-w64-mingw32/include/d3d10effect.h
 %%DATADIR%%/generic-w64-mingw32/include/d3d10effect.idl
 %%DATADIR%%/generic-w64-mingw32/include/d3d10misc.h
@@ -2686,8 +2672,6 @@
 %%DATADIR%%/generic-w64-mingw32/include/newdev.h
 %%DATADIR%%/generic-w64-mingw32/include/nldef.h
 %%DATADIR%%/generic-w64-mingw32/include/nmsupp.h
-%%DATADIR%%/generic-w64-mingw32/include/notificationactivationcallback.h
-%%DATADIR%%/generic-w64-mingw32/include/notificationactivationcallback.idl
 %%DATADIR%%/generic-w64-mingw32/include/npapi.h
 %%DATADIR%%/generic-w64-mingw32/include/nsemail.h
 %%DATADIR%%/generic-w64-mingw32/include/nserror.h
@@ -2848,9 +2832,6 @@
 %%DATADIR%%/generic-w64-mingw32/include/pshpack8.h
 %%DATADIR%%/generic-w64-mingw32/include/pshpck16.h
 %%DATADIR%%/generic-w64-mingw32/include/pstore.h
-%%DATADIR%%/generic-w64-mingw32/include/pthread_signal.h
-%%DATADIR%%/generic-w64-mingw32/include/pthread_time.h
-%%DATADIR%%/generic-w64-mingw32/include/pthread_unistd.h
 %%DATADIR%%/generic-w64-mingw32/include/qedit.h
 %%DATADIR%%/generic-w64-mingw32/include/qedit.idl
 %%DATADIR%%/generic-w64-mingw32/include/qmgr.h
@@ -2942,6 +2923,18 @@
 %%DATADIR%%/generic-w64-mingw32/include/sdpblb.h
 %%DATADIR%%/generic-w64-mingw32/include/sdperr.h
 %%DATADIR%%/generic-w64-mingw32/include/search.h
+%%DATADIR%%/generic-w64-mingw32/include/sec_api/conio_s.h
+%%DATADIR%%/generic-w64-mingw32/include/sec_api/crtdbg_s.h
+%%DATADIR%%/generic-w64-mingw32/include/sec_api/mbstring_s.h
+%%DATADIR%%/generic-w64-mingw32/include/sec_api/search_s.h
+%%DATADIR%%/generic-w64-mingw32/include/sec_api/stdio_s.h
+%%DATADIR%%/generic-w64-mingw32/include/sec_api/stdlib_s.h
+%%DATADIR%%/generic-w64-mingw32/include/sec_api/stralign_s.h
+%%DATADIR%%/generic-w64-mingw32/include/sec_api/string_s.h
+%%DATADIR%%/generic-w64-mingw32/include/sec_api/sys/timeb_s.h
+%%DATADIR%%/generic-w64-mingw32/include/sec_api/tchar_s.h
+%%DATADIR%%/generic-w64-mingw32/include/sec_api/wchar_s.h
+%%DATADIR%%/generic-w64-mingw32/include/sec_api/wconio_s.h
 %%DATADIR%%/generic-w64-mingw32/include/secext.h
 %%DATADIR%%/generic-w64-mingw32/include/security.h
 %%DATADIR%%/generic-w64-mingw32/include/securityappcontainer.h
@@ -3040,6 +3033,7 @@
 %%DATADIR%%/generic-w64-mingw32/include/subsmgr.h
 %%DATADIR%%/generic-w64-mingw32/include/svcguid.h
 %%DATADIR%%/generic-w64-mingw32/include/svrapi.h
+%%DATADIR%%/generic-w64-mingw32/include/swprintf.inl
 %%DATADIR%%/generic-w64-mingw32/include/synchapi.h
 %%DATADIR%%/generic-w64-mingw32/include/sys/cdefs.h
 %%DATADIR%%/generic-w64-mingw32/include/sys/fcntl.h
@@ -3322,8 +3316,6 @@
 %%DATADIR%%/generic-w64-mingw32/include/windows.graphics.capture.interop.idl
 %%DATADIR%%/generic-w64-mingw32/include/windows.graphics.directx.direct3d11.h
 %%DATADIR%%/generic-w64-mingw32/include/windows.graphics.directx.direct3d11.idl
-%%DATADIR%%/generic-w64-mingw32/include/windows.graphics.directx.direct3d11.interop.h
-%%DATADIR%%/generic-w64-mingw32/include/windows.graphics.directx.direct3d11.interop.idl
 %%DATADIR%%/generic-w64-mingw32/include/windows.graphics.directx.h
 %%DATADIR%%/generic-w64-mingw32/include/windows.graphics.directx.idl
 %%DATADIR%%/generic-w64-mingw32/include/windows.graphics.display.h
@@ -3624,7 +3616,6 @@
 %%DATADIR%%/generic-w64-mingw32/include/zmouse.h
 %%DATADIR%%/i686-w64-mingw32/include
 %%DATADIR%%/i686-w64-mingw32/lib/CRT_fp10.o
-%%DATADIR%%/i686-w64-mingw32/lib/CRT_fp4.o
 %%DATADIR%%/i686-w64-mingw32/lib/CRT_fp8.o
 %%DATADIR%%/i686-w64-mingw32/lib/CRT_glob.o
 %%DATADIR%%/i686-w64-mingw32/lib/CRT_noglob.o
@@ -3831,7 +3822,7 @@
 %%DATADIR%%/i686-w64-mingw32/lib/libksproxy.a
 %%DATADIR%%/i686-w64-mingw32/lib/libksuser.a
 %%DATADIR%%/i686-w64-mingw32/lib/libktmw32.a
-%%DATADIR%%/i686-w64-mingw32/lib/libloadperf.a
+%%DATADIR%%/i686-w64-mingw32/lib/liblargeint.a
 %%DATADIR%%/i686-w64-mingw32/lib/liblocationapi.a
 %%DATADIR%%/i686-w64-mingw32/lib/liblogoncli.a
 %%DATADIR%%/i686-w64-mingw32/lib/liblz32.a
@@ -3976,7 +3967,6 @@
 %%DATADIR%%/i686-w64-mingw32/lib/libsensapi.a
 %%DATADIR%%/i686-w64-mingw32/lib/libsensorsapi.a
 %%DATADIR%%/i686-w64-mingw32/lib/libsetupapi.a
-%%DATADIR%%/i686-w64-mingw32/lib/libsfc.a
 %%DATADIR%%/i686-w64-mingw32/lib/libshcore.a
 %%DATADIR%%/i686-w64-mingw32/lib/libshell32.a
 %%DATADIR%%/i686-w64-mingw32/lib/libshfolder.a
@@ -4002,7 +3992,6 @@
 %%DATADIR%%/i686-w64-mingw32/lib/libtdi.a
 %%DATADIR%%/i686-w64-mingw32/lib/libtxfw32.a
 %%DATADIR%%/i686-w64-mingw32/lib/libucrt.a
-%%DATADIR%%/i686-w64-mingw32/lib/libucrt_vcruntime140.a
 %%DATADIR%%/i686-w64-mingw32/lib/libucrtapp.a
 %%DATADIR%%/i686-w64-mingw32/lib/libucrtbase.a
 %%DATADIR%%/i686-w64-mingw32/lib/libucrtbased.a
@@ -4020,9 +4009,6 @@
 %%DATADIR%%/i686-w64-mingw32/lib/libuxtheme.a
 %%DATADIR%%/i686-w64-mingw32/lib/libvcruntime140.a
 %%DATADIR%%/i686-w64-mingw32/lib/libvcruntime140_app.a
-%%DATADIR%%/i686-w64-mingw32/lib/libvcruntime140_threads.a
-%%DATADIR%%/i686-w64-mingw32/lib/libvcruntime140_threads_app.a
-%%DATADIR%%/i686-w64-mingw32/lib/libvcruntime140_threadsd.a
 %%DATADIR%%/i686-w64-mingw32/lib/libvcruntime140d.a
 %%DATADIR%%/i686-w64-mingw32/lib/libvdmdbg.a
 %%DATADIR%%/i686-w64-mingw32/lib/libversion.a
@@ -4116,7 +4102,6 @@
 %%DATADIR%%/i686-w64-mingw32/share/mingw32/COPYING.MinGW-w64.txt
 %%DATADIR%%/x86_64-w64-mingw32/include
 %%DATADIR%%/x86_64-w64-mingw32/lib/CRT_fp10.o
-%%DATADIR%%/x86_64-w64-mingw32/lib/CRT_fp4.o
 %%DATADIR%%/x86_64-w64-mingw32/lib/CRT_fp8.o
 %%DATADIR%%/x86_64-w64-mingw32/lib/CRT_glob.o
 %%DATADIR%%/x86_64-w64-mingw32/lib/CRT_noglob.o
@@ -4505,6 +4490,7 @@
 %%DATADIR%%/x86_64-w64-mingw32/lib/libksguid.a
 %%DATADIR%%/x86_64-w64-mingw32/lib/libksuser.a
 %%DATADIR%%/x86_64-w64-mingw32/lib/libktmw32.a
+%%DATADIR%%/x86_64-w64-mingw32/lib/liblargeint.a
 %%DATADIR%%/x86_64-w64-mingw32/lib/liblinkinfo.a
 %%DATADIR%%/x86_64-w64-mingw32/lib/liblmmib2.a
 %%DATADIR%%/x86_64-w64-mingw32/lib/libloadperf.a
@@ -4897,7 +4883,6 @@
 %%DATADIR%%/x86_64-w64-mingw32/lib/libtsoc.a
 %%DATADIR%%/x86_64-w64-mingw32/lib/libtxfw32.a
 %%DATADIR%%/x86_64-w64-mingw32/lib/libucrt.a
-%%DATADIR%%/x86_64-w64-mingw32/lib/libucrt_vcruntime140.a
 %%DATADIR%%/x86_64-w64-mingw32/lib/libucrtapp.a
 %%DATADIR%%/x86_64-w64-mingw32/lib/libucrtbase.a
 %%DATADIR%%/x86_64-w64-mingw32/lib/libucrtbased.a
@@ -4927,9 +4912,6 @@
 %%DATADIR%%/x86_64-w64-mingw32/lib/libuxtheme.a
 %%DATADIR%%/x86_64-w64-mingw32/lib/libvcruntime140.a
 %%DATADIR%%/x86_64-w64-mingw32/lib/libvcruntime140_app.a
-%%DATADIR%%/x86_64-w64-mingw32/lib/libvcruntime140_threads.a
-%%DATADIR%%/x86_64-w64-mingw32/lib/libvcruntime140_threads_app.a
-%%DATADIR%%/x86_64-w64-mingw32/lib/libvcruntime140_threadsd.a
 %%DATADIR%%/x86_64-w64-mingw32/lib/libvcruntime140d.a
 %%DATADIR%%/x86_64-w64-mingw32/lib/libvdsutil.a
 %%DATADIR%%/x86_64-w64-mingw32/lib/libverifier.a

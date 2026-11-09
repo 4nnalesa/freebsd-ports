@@ -1,5 +1,5 @@
 PORTNAME=	mingw-w64
-DISTVERSION=	14.0.0.20261101
+DISTVERSION=	14.0.0
 CATEGORIES=	devel
 
 MAINTAINER=	4nnalesa@gmail.com
@@ -17,7 +17,7 @@ USES=		gmake llvm:23
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	mingw-w64
-GH_TAGNAME=	ee9bd87644156c41072a11ad957d1e11831a72df
+GH_TAGNAME=	v14.0.0
 
 MINGW_TARGETS=	i686 x86_64 aarch64 armv7
 MINGW_ROOT=	${WRKDIR}/root
@@ -73,6 +73,9 @@ do-build:
 do-install:
 	@${MKDIR} ${STAGEDIR}${MINGW_SYSROOT}
 	@${CP} -a ${MINGW_ROOT}/generic-w64-mingw32 ${STAGEDIR}${MINGW_SYSROOT}/
+	@${RM} ${STAGEDIR}${MINGW_SYSROOT}/generic-w64-mingw32/include/pthread_signal.h \
+		${STAGEDIR}${MINGW_SYSROOT}/generic-w64-mingw32/include/pthread_time.h \
+		${STAGEDIR}${MINGW_SYSROOT}/generic-w64-mingw32/include/pthread_unistd.h
 	@for arch in ${MINGW_TARGETS}; do \
 		${CP} -a ${MINGW_ROOT}/$$arch-w64-mingw32 ${STAGEDIR}${MINGW_SYSROOT}/; \
 	done
