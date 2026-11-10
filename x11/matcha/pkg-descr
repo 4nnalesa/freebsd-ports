@@ -1,1 +1,2 @@
-An Idle Inhibitor for Wayland
+Matcha implements a general Wayland idle inhibitor that utilize
+wayland-protocols as oppossed to the common approach of using dbus.
