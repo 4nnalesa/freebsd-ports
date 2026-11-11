@@ -186,6 +186,7 @@
     SUBDIR += elasticsearch-plugin-head
     SUBDIR += elasticsearch8
     SUBDIR += elasticsearch94
+    SUBDIR += elasticsearch95
     SUBDIR += en-aspell
     SUBDIR += en-hunspell
     SUBDIR += en-mythes
@@ -2060,6 +2061,7 @@
     SUBDIR += rubygem-phone
     SUBDIR += rubygem-pretty-xml
     SUBDIR += rubygem-prism
+    SUBDIR += rubygem-prism1
     SUBDIR += rubygem-psych
     SUBDIR += rubygem-psych3
     SUBDIR += rubygem-raabro

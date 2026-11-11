@@ -1,7 +1,7 @@
 PORTNAME=	nginx
 PORTVERSION=	${NGINX_VERSION}
 .include "version.mk"
-PORTREVISION=	14
+PORTREVISION=	16
 PORTEPOCH=	3
 CATEGORIES=	www
 MASTER_SITES=	https://nginx.org/download/ \
@@ -295,19 +295,24 @@ post-patch:
 		s!%%NGINX_ERRORLOG%%!${NGINX_ERRORLOG}!' \
 		${WRKSRC}/conf/nginx.conf
 
-post-patch-BROTLI-on:
-	@${REINPLACE_CMD} 's!%%PREFIX%%!${LOCALBASE}!g' ${WRKSRC_brotli}/filter/config
-
 
 post-patch-FASTDFS-on:
 	@${REINPLACE_CMD} \
 		's!%%PREFIX%%!${PREFIX}!g;s!%%LOCALBASE%%!${LOCALBASE}!g' \
 		${WRKSRC_fastdfs}/src/config
 
-post-patch-HTTP_AUTH_KRB5-on:
+pre-configure-HTTP_AUTH_KRB5-on:
+	@${RM} -rf ${WRKSRC_auth_krb5}
+	@${CP} -R ${LOCALBASE}/share/nginx/modules/nginx-module-auth-krb5 ${WRKSRC_auth_krb5}
+	@${CHMOD} -R u+w ${WRKSRC_auth_krb5}
 	@${REINPLACE_CMD} 's!%%GSSAPILIBS%%!${GSSAPILIBS}!g; \
 		s!%%GSSAPIINCDIR%%!${GSSAPIINCDIR}!g; \
 		s!%%GSSAPILIBDIR%%!${GSSAPILIBDIR}!g' ${WRKSRC_auth_krb5}/config
+
+pre-configure-HTTP_IP2LOCATION-on:
+	@${RM} -rf ${WRKSRC_ip2location}
+	@${CP} -R ${LOCALBASE}/share/nginx/modules/nginx-module-ip2location ${WRKSRC_ip2location}
+	@${CHMOD} -R u+w ${WRKSRC_ip2location}
 
 post-patch-HTTP_TARANTOOL-on:
 	@${REINPLACE_CMD} 's!%%PREFIX%%!${LOCALBASE}!g' ${WRKSRC_nginx_tarantool}/config
@@ -330,6 +335,11 @@ pre-configure-AWS_AUTH-on:
 	@${CP} -R ${LOCALBASE}/share/nginx/modules/nginx-module-aws-auth ${WRKSRC_aws_auth}
 	@${CHMOD} -R u+w ${WRKSRC_aws_auth}
 
+pre-configure-BROTLI-on:
+	@${RM} -rf ${WRKSRC_brotli}
+	@${CP} -R ${LOCALBASE}/share/nginx/modules/nginx-module-brotli ${WRKSRC_brotli}
+	@${CHMOD} -R u+w ${WRKSRC_brotli}
+
 pre-configure-CACHE_PURGE-on:
 	@${RM} -rf ${WRKSRC_cache_purge}
 	@${CP} -R ${LOCALBASE}/share/nginx/modules/nginx-module-cache-purge ${WRKSRC_cache_purge}
@@ -349,6 +359,11 @@ pre-configure-DRIZZLE-on:
 	@${RM} -rf ${WRKSRC_drizzle}
 	@${CP} -R ${LOCALBASE}/share/nginx/modules/nginx-module-drizzle ${WRKSRC_drizzle}
 	@${CHMOD} -R u+w ${WRKSRC_drizzle}
+
+pre-configure-DYNAMIC_UPSTREAM-on:
+	@${RM} -rf ${WRKSRC_dynamic_upstream}
+	@${CP} -R ${LOCALBASE}/share/nginx/modules/nginx-module-dynamic-upstream ${WRKSRC_dynamic_upstream}
+	@${CHMOD} -R u+w ${WRKSRC_dynamic_upstream}
 
 pre-configure-ECHO-on:
 	@${RM} -rf ${WRKSRC_echo}

@@ -608,6 +608,7 @@
     SUBDIR += py-modelscope-hub
     SUBDIR += py-molequeue
     SUBDIR += py-napari
+    SUBDIR += py-napari-resources
     SUBDIR += py-napari-svg
     SUBDIR += py-npTDMS
     SUBDIR += py-npe2
@@ -646,6 +647,7 @@
     SUBDIR += py-polars-runtime
     SUBDIR += py-posthog
     SUBDIR += py-powerline-status
+    SUBDIR += py-prefab-ui
     SUBDIR += py-progressbar
     SUBDIR += py-progressbar2
     SUBDIR += py-pyEDFlib
