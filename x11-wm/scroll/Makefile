@@ -33,31 +33,31 @@ OPTIONS_DEFINE=	BASU DRM LCMS2 LIBLIFTOFF MANPAGES OPENGL PIXBUF SWAYBG VULKAN X
 OPTIONS_DEFAULT=BASU DRM LCMS2 LIBLIFTOFF MANPAGES OPENGL PIXBUF SWAYBG VULKAN X11
 OPTIONS_SUB=	yes
 
-BASU_DESC=		Tray in swaybar via basu
+BASU_DESC=		Tray in scrollbar via basu
 BASU_LIB_DEPENDS=	libbasu.so:devel/basu
 BASU_MESON_ENABLED=	tray
 
-DRM_DESC=               KMS console support
-DRM_BUILD_DEPENDS=      hwdata>0:misc/hwdata
-DRM_LIB_DEPENDS=        libdisplay-info.so:sysutils/libdisplay-info \
+DRM_DESC=		KMS console support
+DRM_BUILD_DEPENDS=	hwdata>0:misc/hwdata
+DRM_LIB_DEPENDS=	libdisplay-info.so:sysutils/libdisplay-info \
 			libseat.so:sysutils/seatd
-DRM_MESON_ENABLED=      wlroots:session
-DRM_VARS=               BACKENDS+="drm libinput"
+DRM_MESON_ENABLED=	wlroots:session
+DRM_VARS=		BACKENDS+="drm libinput"
 
-LCMS2_LIB_DEPENDS=      liblcms2.so:graphics/lcms2
-LCMS2_MESON_ENABLED=    wlroots:color-management
+LCMS2_LIB_DEPENDS=	liblcms2.so:graphics/lcms2
+LCMS2_MESON_ENABLED=	wlroots:color-management
 
-LIBLIFTOFF_DESC=        libliftoff DRM interface (see WLR_DRM_FORCE_LIBLIFTOFF)
-LIBLIFTOFF_LIB_DEPENDS= libliftoff.so:graphics/libliftoff
-LIBLIFTOFF_MESON_ENABLED=       wlroots:libliftoff
-LIBLIFTOFF_IMPLIES=     DRM
+LIBLIFTOFF_DESC=		libliftoff DRM interface (see WLR_DRM_FORCE_LIBLIFTOFF)
+LIBLIFTOFF_LIB_DEPENDS=		libliftoff.so:graphics/libliftoff
+LIBLIFTOFF_MESON_ENABLED=	wlroots:libliftoff
+LIBLIFTOFF_IMPLIES=		DRM
 
 MANPAGES_BUILD_DEPENDS=	scdoc>=1.9.2:textproc/scdoc
 MANPAGES_MESON_ENABLED=	man-pages
 
-OPENGL_RUN_DEPENDS=     mesa-dri>0:graphics/mesa-dri
-OPENGL_USE=             GL=egl,glesv2
-OPENGL_VARS=            RENDERERS+=gles2
+OPENGL_RUN_DEPENDS=	mesa-dri>0:graphics/mesa-dri
+OPENGL_USE=		GL=egl,glesv2
+OPENGL_VARS=		RENDERERS+=gles2
 
 PIXBUF_USE=		GNOME=gdkpixbuf
 PIXBUF_MESON_ENABLED=	gdk-pixbuf
@@ -72,12 +72,12 @@ VULKAN_LIB_DEPENDS=	libvulkan.so:graphics/vulkan-loader
 VULKAN_RUN_DEPENDS=	mesa-dri>0:graphics/mesa-dri
 VULKAN_VARS=		RENDERERS+=vulkan
 
-X11_BUILD_DEPENDS=      Xwayland:x11-servers/xwayland
+X11_BUILD_DEPENDS=	Xwayland:x11-servers/xwayland
 X11_LIB_DEPENDS=	libxcb-errors.so:x11/xcb-util-errors \
 			libxcb-render-util.so:x11/xcb-util-renderutil \
 			libxcb-icccm.so:x11/xcb-util-wm
 X11_RUN_DEPENDS=	Xwayland:x11-servers/xwayland
-X11_MESON_ENABLED=      wlroots:xwayland
+X11_MESON_ENABLED=	wlroots:xwayland
 X11_USE=		XORG=xcb
 X11_VARS=		BACKENDS+=x11
 
