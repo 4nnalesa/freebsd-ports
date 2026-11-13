@@ -1,9 +1,6 @@
 PORTNAME=	deepseek-harness
-DISTVERSION=	0.2.2-rc.1
+DISTVERSION=	0.2.2-rc.2
 CATEGORIES=	misc
-DISTNAME=	${PORTNAME}-dsh-v${DISTVERSION}
-DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
-MASTER_SITES=	https://github.com/deepseek-ai/deepseek-harness/archive/refs/tags/dsh-v${DISTVERSION}/
 
 MAINTAINER=	4nnalesa@gmail.com
 COMMENT=	an open-source agent harness developed by DeepSeek AI
@@ -19,6 +16,12 @@ ONLY_FOR_ARCHS_REASON=	the FreeBSD flock addon is built for x86-64 only
 # pnpm is the repository's package manager. The fetch qualifier lets the
 # framework prefetch the complete store before any source is extracted.
 USES=		gmake nodejs:24,build,run npm:pnpm,fetch pkgconfig python:build
+
+USE_GITHUB=	yes
+GH_ACCOUNT=	deepseek-ai
+GH_PROJECT=	deepseek-harness
+GH_TAGNAME=	dsh-v${DISTVERSION}
+
 USE_RC_SUBR=	dsh_web
 
 SUB_FILES=	dsh pkg-message
@@ -45,7 +48,7 @@ MAKE_ENV+=	npm_config_nodedir=${LOCALBASE} \
 		CI=1 \
 		PYTHON=${PYTHON_CMD} \
 		npm_config_python=${PYTHON_CMD} \
-		DSH_CLIENT_COMMIT_HASH=66491b0 \
+		DSH_CLIENT_COMMIT_HASH=ddac967 \
 		DSH_CLIENT_VERSION=${DISTVERSION}
 
 do-build:

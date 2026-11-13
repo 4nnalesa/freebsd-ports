@@ -1,9 +1,9 @@
-FreeBSD notes for misc/deepseek-harness 0.2.2-rc.1
+FreeBSD notes for misc/deepseek-harness 0.2.2-rc.2
 ==================================================
 
-The port starts from the upstream source archive:
+The port starts from the upstream source archive, fetched with USE_GITHUB:
 
-  https://github.com/deepseek-ai/deepseek-harness/archive/refs/tags/dsh-v0.2.2-rc.1.tar.gz
+  https://github.com/deepseek-ai/deepseek-harness/archive/refs/tags/dsh-v0.2.2-rc.2.tar.gz
 
 All FreeBSD changes are confined to files/:
 
@@ -22,7 +22,7 @@ All FreeBSD changes are confined to files/:
   patch-packages_terminal_terminal-bash_src_config.ts
       Use /usr/local/bin/bash, the location installed by shells/bash.
 
-  patch-packages_fs_tool-fs-search_src_search-core.ts
+  patch-packages_util_ripgrep_src_index.ts
       Resolve the system ripgrep when no @vscode/ripgrep binary exists.
       No FreeBSD binary is shipped by that package.
 
@@ -37,11 +37,11 @@ All FreeBSD changes are confined to files/:
       it into native/system/packages/freebsd-x64.
 
   packagejsons/
-      Every workspace package.json, plus pnpm-workspace.yaml, pnpm-lock.yaml
-      and patches/. USES=npm:pnpm,fetch treats this directory as
-      PKGJSONSDIR. The manifests and lockfile also carry the FreeBSD-only
-      additions: the optional freebsd-x64 dependency of the native entry,
-      the freebsd-x64 workspace importer, and the node-pty patch.
+      The root package.json, pnpm-workspace.yaml, pnpm-lock.yaml and the
+      pnpm patches/ directory needed by USES=npm:pnpm,fetch, plus the two
+      manifests changed for FreeBSD: the optional freebsd-x64 dependency
+      of the native entry and the freebsd-x64 workspace package. All other
+      workspace manifests come directly from the upstream archive.
 
   fix-deploy-links.py
       Copy the two link: vendor packages into the deploy tree, remove links
@@ -61,7 +61,7 @@ FreeBSD patches are applied. The port therefore uses:
   NPM_EXTRACT=no
 
 make fetch runs pnpm fetch against the manifests in files/packagejsons and
-archives the result as deepseek-harness-0.2.2-rc.1-node-modules-x64.tar.gz.
+archives the result as deepseek-harness-0.2.2-rc.2-node-modules-x64.tar.gz.
 make build restores the normalized store index with sqlite3, then runs
 pnpm install --offline --frozen-lockfile --trust-lockfile. No registry
 request is made during the build.
@@ -134,7 +134,7 @@ Verification
 
 Completed on FreeBSD 15.1 amd64 with Node 24:
 
-  dsh --version                0.2.2-rc.1
+  dsh --version                0.2.2-rc.2
   dsh --help                   identical to the source launcher
   dsh web --help               installed wrapper matches the source entry;
                                the source launcher needs the same

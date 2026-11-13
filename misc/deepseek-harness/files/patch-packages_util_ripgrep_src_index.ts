@@ -1,17 +1,18 @@
---- packages/fs/tool-fs-search/src/search-core.ts.orig
-+++ packages/fs/tool-fs-search/src/search-core.ts
-@@ -165,8 +165,8 @@
-  * at the call boundary keeps a missing or corrupt binary at the first search
-  * call as `SEARCH_FAILED`, rather than failing the Loader composition.
-  *
-- * @returns the packaged binary's absolute path; the memoized promise rejects
-- *   when the platform package cannot be resolved.
-+ * @returns the packaged binary path, or the system `rg` when the platform
-+ *   package ships no executable for this host (FreeBSD).
+--- packages/util/ripgrep/src/index.ts.orig
++++ packages/util/ripgrep/src/index.ts
+@@ -8,8 +8,9 @@
+ /**
+  * Resolve the packaged executable lazily, once per process. Single-file runtimes use an existing
+  * `-rg` sidecar; Electron uses the unpacked ASAR path. Resolution failures reject
+- * this call, not package loading. No system executable or remote fallback is used.
+- * @returns the packaged executable's absolute path.
++ * this call, not package loading. FreeBSD has no published binary package, so
++ * it falls back to the system `rg` from textproc/ripgrep.
++ * @returns the packaged executable's path, or `rg` on FreeBSD.
   */
  export function resolveRgPath(): Promise<string> {
    rgPathPromise ??= Promise.resolve().then(async () => {
-@@ -175,10 +175,17 @@
+@@ -18,10 +19,17 @@
        ? join(executable.dir, `${executable.name}-rg.exe`)
        : `${process.execPath}-rg`
      if ('pkg' in process && existsSync(executableSidecar)) return executableSidecar
