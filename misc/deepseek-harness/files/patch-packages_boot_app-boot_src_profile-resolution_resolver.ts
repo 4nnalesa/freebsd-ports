@@ -1,6 +1,6 @@
---- packages/boot/app-boot/src/profile-resolution/resolver.ts.orig
+--- packages/boot/app-boot/src/profile-resolution/resolver.ts.orig	2026-11-13 05:26:07 UTC
 +++ packages/boot/app-boot/src/profile-resolution/resolver.ts
-@@ -732,18 +732,31 @@
+@@ -732,18 +732,31 @@ function internalModules(): InternalModules {
  
  function internalModules(): InternalModules {
    const require = createRequire(import.meta.url)

@@ -1,11 +1,14 @@
-FreeBSD notes for misc/deepseek-harness 0.2.2-rc.2
+FreeBSD notes for misc/deepseek-harness 0.2.2-rc.3
 ==================================================
 
-The port starts from the upstream source archive, fetched with USE_GITHUB:
-
-  https://github.com/deepseek-ai/deepseek-harness/archive/refs/tags/dsh-v0.2.2-rc.2.tar.gz
+The port uses the GitHub source archive selected by USE_GITHUB for tag
+dsh-v0.2.2-rc.3 (GH_ACCOUNT=deepseek-ai, GH_PROJECT=deepseek-harness).
 
 All FreeBSD changes are confined to files/:
+
+  patch-native_system_packages_entry_package.json
+      Register @deepseek-ai/node-addon-system-freebsd-x64 as an optional
+      dependency of the native system entry package.
 
   patch-native_system_packages_entry_src_flock.ts
       Teach the lazy flock entry that FreeBSD is a supported host.
@@ -37,11 +40,12 @@ All FreeBSD changes are confined to files/:
       it into native/system/packages/freebsd-x64.
 
   packagejsons/
-      The root package.json, pnpm-workspace.yaml, pnpm-lock.yaml and the
-      pnpm patches/ directory needed by USES=npm:pnpm,fetch, plus the two
-      manifests changed for FreeBSD: the optional freebsd-x64 dependency
-      of the native entry and the freebsd-x64 workspace package. All other
-      workspace manifests come directly from the upstream archive.
+      The minimal files required by USES=npm:pnpm,fetch (PKGJSONSDIR):
+      the root package.json, pnpm-workspace.yaml, the upstream patches/
+      directory (with the node-pty closefrom(3) addition), and the
+      updated pnpm-lock.yaml for the freebsd-x64 importer and node-pty
+      patch hash. All other workspace manifests come directly from the
+      upstream archive.
 
   fix-deploy-links.py
       Copy the two link: vendor packages into the deploy tree, remove links
@@ -61,7 +65,7 @@ FreeBSD patches are applied. The port therefore uses:
   NPM_EXTRACT=no
 
 make fetch runs pnpm fetch against the manifests in files/packagejsons and
-archives the result as deepseek-harness-0.2.2-rc.2-node-modules-x64.tar.gz.
+archives the result as deepseek-harness-0.2.2-rc.3-node-modules-x64.tar.gz.
 make build restores the normalized store index with sqlite3, then runs
 pnpm install --offline --frozen-lockfile --trust-lockfile. No registry
 request is made during the build.
@@ -113,14 +117,15 @@ Account sign-in
 ---------------
 
 The DeepSeek account provider accepts only a loopback HTTP origin for the
-OAuth callback (RFC 8252 style). If the browser opens the UI at
-http://10.0.0.3:3080, startSignIn rejects that origin before opening the
+OAuth callback (RFC 8252 style). Opening the UI using a non-loopback
+address makes startSignIn reject that origin before opening the
 authorization page and the UI reports a failed login. The /api trust fence
 and --trusted-host do not change this account-specific rule.
 
-Use an SSH local forward and open the loopback URL:
+Use an SSH local forward to the machine running dsh and open the loopback
+URL:
 
-  ssh -N -L 3080:10.0.0.3:3080 <user>@<host>
+  ssh -N -L 3080:127.0.0.1:3080 <user>@<dsh-host>
   # browser: http://127.0.0.1:3080/?token=<token>
 
 The Platform redirect then goes to 127.0.0.1:3080/oauth/callback on the
@@ -134,15 +139,9 @@ Verification
 
 Completed on FreeBSD 15.1 amd64 with Node 24:
 
-  dsh --version                0.2.2-rc.2
-  dsh --help                   identical to the source launcher
-  dsh web --help               installed wrapper matches the source entry;
-                               the source launcher needs the same
-                               --expose-internals flag to boot the host
-  dsh web                      token URL, HTTP 200 from the Web UI
-  dsh headless                 mock LLM turn completed; bash tool output
-                               and session files written under DSH_HOME
-  native flock                 second lock rejected with EAGAIN
-  process inspector            snapshot/tree/isAlive/session against ps(1)
-  package install              wrapper and native addons load from the
-                               installed lib/node_modules tree
+  make checksum             all three distfiles matched SHA256
+  make clean                clean build from prefetched distfiles
+  make package              offline install, native addons, host/client/web
+                            builds, deploy, stage and package succeeded
+  make check-plist          no staged files missing or orphaned
+  pkg info -F               deepseek-harness-0.2.2.r.3, FreeBSD:15:amd64

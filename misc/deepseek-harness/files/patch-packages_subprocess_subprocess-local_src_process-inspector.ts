@@ -1,6 +1,6 @@
---- packages/subprocess/subprocess-local/src/process-inspector.ts.orig
+--- packages/subprocess/subprocess-local/src/process-inspector.ts.orig	2026-11-13 05:26:07 UTC
 +++ packages/subprocess/subprocess-local/src/process-inspector.ts
-@@ -380,7 +380,8 @@
+@@ -389,7 +389,8 @@ function quiescent(state: string | undefined): boolean
  // Zombie and dead states answer "present in the table" but never "still
  // running"; a table without a state column can only report presence.
  function quiescent(state: string | undefined): boolean {
@@ -10,15 +10,10 @@
  }
  
  class PosixProcessSnapshot implements ProcessSnapshot {
-@@ -501,6 +502,31 @@
-       started: match[3],
-       session: undefined,
-       state: undefined,
-+    }]
-+  })
-+  return { rows, complete }
-+}
-+
+@@ -515,6 +516,31 @@ function macProcessTable(internals: ProcessInspectorIn
+   return { rows, complete }
+ }
+ 
 +// FreeBSD calls the session-id keyword `sid` and rejects `sess`. Its `-o`
 +// parser mishandles a comma-joined list containing `=` keywords, so pass
 +// each keyword through a separate -o argument.
@@ -39,10 +34,15 @@
 +      started: match[5],
 +      session: Number(match[3]),
 +      state: match[4],
-     }]
-   })
-   return { rows, complete }
-@@ -532,6 +558,34 @@
++    }]
++  })
++  return { rows, complete }
++}
++
+ class MacProcessInspector extends PosixProcessInspector {
+   foregroundPgid(shellPid: number): number | undefined {
+     try {
+@@ -541,6 +567,34 @@ class MacProcessInspector extends PosixProcessInspecto
  
  }
  
@@ -77,7 +77,7 @@
  /**
   * Create the supported platform inspector or fail at plugin load.
   * @param platform - target Node platform.
-@@ -546,6 +600,7 @@
+@@ -555,6 +609,7 @@ export function createProcessInspector(
  ): ProcessInspector {
    if (platform === 'linux') return new LinuxProcessInspector(arch, internals)
    if (platform === 'darwin') return new MacProcessInspector(internals)

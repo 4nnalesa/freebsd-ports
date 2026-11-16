@@ -27,12 +27,12 @@ WEB UI
 
 ACCOUNT LOGIN
     DeepSeek account OAuth only accepts a loopback HTTP browser origin.
-    Opening the UI as http://10.0.0.3:3080 therefore makes "Sign in"
-    fail before the authorization tab opens, even though normal API
-    calls are trusted. Use an SSH local forward and open the loopback
-    URL instead:
+    Opening the UI using a non-loopback address therefore makes
+    "Sign in" fail before the authorization tab opens, even though
+    normal API calls are trusted. Use an SSH local forward and open
+    the loopback URL instead:
 
-        ssh -N -L 3080:10.0.0.3:3080 <user>@<host>
+        ssh -N -L 3080:127.0.0.1:3080 <user>@<dsh-host>
         # then open http://127.0.0.1:3080/?token=<token>
 
     An API key configured in Settings, or DEEPSEEK_API_KEY, does not

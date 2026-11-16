@@ -50,7 +50,7 @@ command_args="-P ${pidfile} -o ${dsh_web_log} %%PREFIX%%/bin/dsh web --host ${ds
 # rc.subr changes user with su -m, which preserves the caller's environment.
 # Pin HOME and DSH_HOME so the service never inherits root's home; PATH must
 # include the local package prefix for bash, rg and node.
-: ${dsh_web_env:="HOME=${dsh_web_chdir} DSH_HOME=${dsh_web_chdir} PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin"}
+: ${dsh_web_env:="HOME=${dsh_web_chdir} DSH_HOME=${dsh_web_chdir} PATH=/sbin:/bin:/usr/sbin:/usr/bin:%%LOCALBASE%%/sbin:%%LOCALBASE%%/bin"}
 
 # Create the state directory and logfile as the service account before
 # daemon(8) opens the log and drops privileges.
