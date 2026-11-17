@@ -1,3 +1,6 @@
+[
+{ type: install
+  message: <<EOM
 SillyTavern has been installed in %%WWWDIR%%.
 
 Quick start
@@ -24,14 +27,14 @@ upgrades. It controls the port, listen address, IP whitelist, SSL,
 authentication and other server options.
 
 Characters, chats, presets, uploads and backups are stored separately in
-/var/db/sillytavern, so upgrading or reinstalling the port does not remove
+%%DBDIR%%, so upgrading or reinstalling the port does not remove
 user data.
 
 Logs
 ====
 
     /var/log/sillytavern.log            service output
-    /var/db/sillytavern/access.log      HTTP access log
+    %%DBDIR%%/access.log      HTTP access log
 
 Network access
 ==============
@@ -59,4 +62,7 @@ Updating
 
 The application files in %%WWWDIR%% are managed by pkg. Rebuild the port or
 use pkg upgrade to update them; %%ETCDIR%%/config.yaml and
-/var/db/sillytavern are preserved.
+%%DBDIR%% are preserved.
+EOM
+}
+]

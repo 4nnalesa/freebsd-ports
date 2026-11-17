@@ -13,34 +13,47 @@ USES=		nodejs:24,run npm:npm,fetch
 USE_GITHUB=	yes
 GH_ACCOUNT=	SillyTavern
 GH_PROJECT=	SillyTavern
-GH_TAGNAME=	${DISTVERSION}
 USE_RC_SUBR=	sillytavern
-SUB_FILES=	pkg-message
 
-# The dependency tree is pure JavaScript (no native addons), so the
-# prefetched node_modules archive is architecture independent.
-NPM_PREFETCH=	yes
-# Only the runtime dependency tree belongs in the package.
 NPM_FETCH_FLAGS+=	--omit=dev
+# Pure JS/WASM dependency tree (no native .node addons).
 NO_ARCH=	yes
 NO_BUILD=	yes
 
-# Headless install: never try to open a browser on the server console.
-post-extract:
-	${REINPLACE_CMD} -e '/^browserLaunch:/,/^[^[:space:]]/ s/^  enabled: true/  enabled: false/' \
+SUB_FILES=	pkg-message
+SUB_LIST=	DBDIR=${DBDIR} \
+		GROUPS=${GROUPS} \
+		USERS=${USERS}
+PLIST_SUB=	DBDIR=${DBDIR} \
+		GROUPS=${GROUPS} \
+		USERS=${USERS}
+
+USERS=		www
+GROUPS=		www
+
+DBDIR=		/var/db/${PORTNAME}
+
+post-patch:
+	@${REINPLACE_CMD} -e '/^browserLaunch:/,/^[^[:space:]]/ s/^  enabled: true/  enabled: false/' \
 		${WRKSRC}/default/config.yaml
 
 do-install:
-	${MKDIR} ${STAGEDIR}${WWWDIR}
-	cd ${WRKSRC} && ${COPYTREE_SHARE} . ${STAGEDIR}${WWWDIR}
-	${RM} -rf ${STAGEDIR}${WWWDIR}/tests \
-		${STAGEDIR}${WWWDIR}/.github \
-		${STAGEDIR}${WWWDIR}/.vscode \
-		${STAGEDIR}${WWWDIR}/.gemini \
-		${STAGEDIR}${WWWDIR}/colab \
-		${STAGEDIR}${WWWDIR}/docker
-	${MKDIR} ${STAGEDIR}${ETCDIR}
-	${INSTALL_DATA} ${WRKSRC}/default/config.yaml ${STAGEDIR}${ETCDIR}/config.yaml.sample
-	${MKDIR} ${STAGEDIR}/var/db/sillytavern
+	@${MKDIR} ${STAGEDIR}${WWWDIR} \
+		${STAGEDIR}${ETCDIR} \
+		${STAGEDIR}${DBDIR} \
+		${STAGEDIR}/var/run/${PORTNAME}
+	cd ${WRKSRC} && ${COPYTREE_SHARE} \
+		"default plugins public src package.json plugins.js recover.js server.js webpack.config.js node_modules" \
+		${STAGEDIR}${WWWDIR}
+	@${MKDIR} ${STAGEDIR}${WWWDIR}/backups \
+		${STAGEDIR}${WWWDIR}/public/scripts/extensions/third-party
+	${RM} -r ${STAGEDIR}${WWWDIR}/src/electron
+	${FIND} ${STAGEDIR}${WWWDIR} \
+		\( -name '*.bak' -o -name '*.orig' -o -name '.gitkeep' \) -delete
+	${FIND} ${STAGEDIR}${WWWDIR}/node_modules \
+		\( -name .bin -o -name coverage -o -name test -o -name tests \) \
+		-type d -prune -exec ${RM} -r {} +
+	${INSTALL_DATA} ${WRKSRC}/default/config.yaml \
+		${STAGEDIR}${ETCDIR}/config.yaml.sample
 
 .include <bsd.port.mk>
