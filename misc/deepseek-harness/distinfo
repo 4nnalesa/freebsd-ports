@@ -1,7 +1,7 @@
-TIMESTAMP = 1794790712
+TIMESTAMP = 1795270378
 SHA256 (pnpm-11.28.5.tgz) = d3305deb4c0866855cd9d9eec1226743cbe4a09785a6476b8b74ba39783fb456
 SIZE (pnpm-11.28.5.tgz) = 11423710
-SHA256 (deepseek-harness-0.2.2-rc.3-node-modules-x64.tar.gz) = 5680b507869ab9eafb44f588a5e145d256575241dc699122d76985840b81b867
-SIZE (deepseek-harness-0.2.2-rc.3-node-modules-x64.tar.gz) = 361516023
-SHA256 (deepseek-ai-deepseek-harness-0.2.2-rc.3-dsh-v0.2.2-rc.3_GH0.tar.gz) = bf6d668e52a26edf98aa2ef7960e240c8d9afcefbad2b09887a2cb1e14001dd5
-SIZE (deepseek-ai-deepseek-harness-0.2.2-rc.3-dsh-v0.2.2-rc.3_GH0.tar.gz) = 42874373
+SHA256 (deepseek-harness-0.2.2-rc.5-node-modules-x64.tar.gz) = 5680b507869ab9eafb44f588a5e145d256575241dc699122d76985840b81b867
+SIZE (deepseek-harness-0.2.2-rc.5-node-modules-x64.tar.gz) = 361516023
+SHA256 (deepseek-ai-deepseek-harness-dsh-v0.2.2-rc.5_GH0.tar.gz) = 4e24e132a9fc267d5cdc5724525873db2575680e073fd2db4519b92553614215
+SIZE (deepseek-ai-deepseek-harness-dsh-v0.2.2-rc.5_GH0.tar.gz) = 42885661

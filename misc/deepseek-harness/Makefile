@@ -1,116 +1,107 @@
 PORTNAME=	deepseek-harness
-DISTVERSION=	0.2.2-rc.3
+DISTVERSIONPREFIX=	dsh-v
+DISTVERSION=	0.2.2-rc.5
 CATEGORIES=	misc
+MASTER_SITES=	# prefetched via USES=npm
 
 MAINTAINER=	4nnalesa@gmail.com
-COMMENT=	Open-source agent harness developed by DeepSeek AI
+COMMENT=	Open-source agent harness built on Cordis plugin architecture
 WWW=		https://github.com/deepseek-ai/deepseek-harness
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-# The FreeBSD flock binding is compiled for amd64 only.
-ONLY_FOR_ARCHS=	amd64
-ONLY_FOR_ARCHS_REASON=	the FreeBSD flock addon is built for x86-64 only
+ONLY_FOR_ARCHS=		amd64
+ONLY_FOR_ARCHS_REASON=	Build toolchains (rolldown, oxc-resolver, lightningcss) only ship FreeBSD x64 bindings
 
-BUILD_DEPENDS=	sqlite3:databases/sqlite3
+BUILD_DEPENDS=	npm-node24>0:www/npm-node24
 RUN_DEPENDS=	bash:shells/bash \
 		rg:textproc/ripgrep
 
-# pnpm is the repository's package manager. The fetch qualifier lets the
-# framework prefetch the complete store before any source is extracted.
-USES=		gmake nodejs:24,build,run npm:pnpm,fetch pkgconfig python:build
+USES=		gmake nodejs:24,env npm:pnpm,build,run python:build
 USE_GITHUB=	yes
 GH_ACCOUNT=	deepseek-ai
-GH_PROJECT=	deepseek-harness
-GH_TAGNAME=	dsh-v${DISTVERSION}
 USE_RC_SUBR=	dsh_web
+
+MAKE_ENV+=	DSH_BUILD_CLIENT_PROFILE=official \
+		DSH_CLIENT_COMMIT_HASH=9c2670d \
+		NODE_OPTIONS="--max-old-space-size=8192" \
+		PATH="${WRKDIR}/.bin:${PATH}"
+
+NPM_PREFETCH_ARCHS=	amd64
+NPM_CACHE_SETUP_CMD=	${SH} -c 'for f in patches/*__AT__*; do ${MV} "$$f" "$$(printf "%s" "$$f" | ${SED} "s/__AT__/@/g")"; done'
 
 SUB_FILES=	dsh pkg-message
 
-# Match the pnpm version pinned by the root package.json.
-NPM_VER=	11.28.5
-NPM_PREFETCH=	yes
-NPM_PREFETCH_ARCHS=	amd64
-# The framework's extract-time install would run before post-extract and the
-# FreeBSD patches, so do-build installs from the prefetched store itself.
-NPM_EXTRACT=	no
+PLIST_FILES=	bin/dsh
 
-# node-gyp must use the headers installed by www/node24. The client build
-# embeds the release commit and version because the source tarball has no
-# .git directory from which to derive them. In a clean build jail node-gyp
-# may not find python3 through PATH, so pass the python:build interpreter
-# explicitly.
-MAKE_ENV+=	npm_config_nodedir=${LOCALBASE} \
-		CI=1 \
-		PYTHON=${PYTHON_CMD} \
-		npm_config_python=${PYTHON_CMD} \
-		DSH_CLIENT_COMMIT_HASH=38a6a5c \
-		DSH_CLIENT_VERSION=${DISTVERSION}
-
-# Overlay the FreeBSD lockfile and node-pty patch and add the FreeBSD platform
-# package before do-patch applies the remaining source patches.
-post-extract:
-	${CP} ${FILESDIR}/packagejsons/pnpm-lock.yaml ${WRKSRC}/pnpm-lock.yaml
-	${CP} ${FILESDIR}/packagejsons/patches/node-pty@1.2.0-beta.15.patch \
-		${WRKSRC}/patches/node-pty@1.2.0-beta.15.patch
-	${MKDIR} ${WRKSRC}/native/system/packages/freebsd-x64/bin
-	${CP} ${FILESDIR}/freebsd-x64/package.json \
-		${FILESDIR}/freebsd-x64/prebuilds.json \
-		${FILESDIR}/freebsd-x64/README.md \
-		${WRKSRC}/native/system/packages/freebsd-x64/
+_NODE_GYP=	${LOCALBASE}/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js
+_APP_DIR=	${PREFIX}/lib/node_modules/${PORTNAME}
 
 post-patch:
-	@${REINPLACE_CMD} 's|%%LOCALBASE%%|${LOCALBASE}|g' \
+	@${REINPLACE_CMD} -e 's|%%LOCALBASE%%|${LOCALBASE}|g' \
+		${WRKSRC}/packages/util/ripgrep/src/index.ts \
 		${WRKSRC}/packages/terminal/terminal-bash/src/config.ts
+	@${RM} ${WRKSRC}/packages/util/ripgrep/src/index.ts.bak \
+		${WRKSRC}/packages/terminal/terminal-bash/src/config.ts.bak
 
 do-build:
-	@${MKDIR} ${WRKDIR}/.bin
-	${SETENV} ${MAKE_ENV} corepack enable --install-directory ${WRKDIR}/.bin
-	${SETENV} ${MAKE_ENV} corepack install -g ${DISTDIR}/pnpm-${NPM_VER}.tgz
-	${RM} ${WRKDIR}/pnpm-store/v11/index.db
-	${SETENV} ${MAKE_ENV} ${LOCALBASE}/bin/sqlite3 \
-		${WRKDIR}/pnpm-store/v11/index.db < ${WRKDIR}/pnpm-store/v11/index_dump.sql
-	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} ${NPM_CMDNAME} install --offline \
-		--frozen-lockfile --trust-lockfile --store-dir ${WRKDIR}/pnpm-store
-	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} ${NPM_CMDNAME} run build:native-system
-	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} ${NPM_CMDNAME} exec tsx \
-		scripts/compile-referenced-projects.ts host-libraries
-	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} ${NPM_CMDNAME} exec tsx \
-		scripts/compile-referenced-projects.ts client
-	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} ${NPM_CMDNAME} exec tsdown \
-		--config-loader native --env.DSH_BUILD_FACE client
-	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} ${NPM_CMDNAME} \
-		--filter @deepseek-ai/dsh-web-frontend run build
-	cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} ${NPM_CMDNAME} --offline \
-		--trust-lockfile --store-dir ${WRKDIR}/pnpm-store \
-		--filter dsh-python-runtime-closure deploy --prod \
-		--config.ignore-scripts=true ${WRKDIR}/deploy
-	cd ${WRKDIR}/deploy && ${SETENV} ${MAKE_ENV} ${NPM_CMDNAME} \
-		--store-dir ${WRKDIR}/pnpm-store rebuild node-pty koffi \
-		@deepseek-ai/dsh-subprocess-local
+	@${ECHO_MSG} "===>  Building DeepSeek Harness artifacts"
+	@cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} \
+		CC="${CC}" CFLAGS="${CFLAGS}" \
+		pnpm run build:artifacts
+	@${ECHO_MSG} "===>  Deploying runtime closure for @deepseek-ai/dsh"
+	@${RM} -r ${WRKDIR}/deploy
+	@cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} \
+		pnpm --filter @deepseek-ai/dsh --prod deploy \
+			--offline --ignore-scripts --trust-lockfile \
+			--config.inject-workspace-packages=true \
+			--config.node-linker=hoisted \
+			--store-dir ${WRKDIR}/node-modules-cache/pnpm-store \
+			${WRKDIR}/deploy
+	@${PYTHON_CMD} ${FILESDIR}/complete-deploy.py ${WRKSRC} ${WRKDIR}/deploy
+	@${RM} -f ${WRKDIR}/deploy/pnpm-lock.yaml \
+		${WRKDIR}/deploy/node_modules/.modules.yaml
+	@${ECHO_MSG} "===>  Building native node-pty addon for FreeBSD"
+	@for dir in ${WRKDIR}/deploy/node_modules/node-pty; do \
+		if [ -f "$${dir}/binding.gyp" ]; then \
+			${PATCH} -s -d "$${dir}" -p0 < ${FILESDIR}/extra-patch-node-pty && \
+			(cd "$${dir}" && \
+			${SETENV} ${MAKE_ENV} \
+				CC="${CC}" CXX="${CXX}" \
+				CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" \
+				MAKE="${GMAKE}" PYTHON="${PYTHON_CMD}" \
+				npm_config_nodedir="${LOCALBASE}" \
+				npm_config_offline=true \
+				${LOCALBASE}/bin/node ${_NODE_GYP} rebuild \
+					--nodedir="${LOCALBASE}" \
+					--jobs=${MAKE_JOBS_NUMBER}) && \
+			${FIND} "$${dir}/build" -mindepth 1 -maxdepth 1 ! -name Release -exec ${RM} -r {} + && \
+			${FIND} "$${dir}/build/Release" -mindepth 1 -maxdepth 1 ! -name 'pty.node' -exec ${RM} -r {} + && \
+			${RM} -r "$${dir}/prebuilds" "$${dir}/third_party" "$${dir}/src/unix/pty.cc.orig"; \
+		fi; \
+	done
+	@for d in `${FIND} ${WRKDIR}/deploy -type d -name prebuilds`; do \
+		for sub in "$${d}"/*; do \
+			[ -e "$${sub}" ] || continue; \
+			case "`${BASENAME} "$${sub}"`" in \
+				freebsd-*) ;; \
+				*) ${RM} -r "$${sub}" ;; \
+			esac; \
+		done; \
+		${RMDIR} "$${d}" 2>/dev/null || true; \
+	done
 
-# The deploy helper also renames build-path virtual-store entries so the
-# resulting plist is independent of WRKSRC. node-pty's Windows ConPTY files
-# and non-FreeBSD prebuilds have no role in this package.
-post-build:
-	${PYTHON_CMD} ${FILESDIR}/fix-deploy-links.py ${WRKDIR}/deploy ${WRKSRC}
-	${RM} -rf ${WRKDIR}/deploy/node_modules/.pnpm/node-pty@*/node_modules/node-pty/prebuilds \
-		${WRKDIR}/deploy/node_modules/.pnpm/node-pty@*/node_modules/node-pty/third_party
-
-# Keep the relative links inside node_modules intact; the installed root is
-# a conventional global Node package addressable as deepseek-harness.
 do-install:
-	${MKDIR} ${STAGEDIR}${PREFIX}/lib/node_modules/deepseek-harness
-	cd ${WRKDIR}/deploy && ${CP} -R node_modules \
-		${STAGEDIR}${PREFIX}/lib/node_modules/deepseek-harness/
-	${STRIP_CMD} \
-		${STAGEDIR}${PREFIX}/lib/node_modules/deepseek-harness/node_modules/.pnpm/@deepseek-ai+node-addon-system-freebsd-x64@file+workspace/node_modules/@deepseek-ai/node-addon-system-freebsd-x64/bin/system.node \
-		${STAGEDIR}${PREFIX}/lib/node_modules/deepseek-harness/node_modules/.pnpm/node-pty@*/node_modules/node-pty/build/Release/pty.node
-	${ECHO_CMD} '{"name":"deepseek-harness","version":"${DISTVERSION}","private":true}' \
-		> ${STAGEDIR}${PREFIX}/lib/node_modules/deepseek-harness/package.json
+	@${MKDIR} ${STAGEDIR}${_APP_DIR}
+	@cd ${WRKDIR}/deploy && ${COPYTREE_SHARE} . ${STAGEDIR}${_APP_DIR}
 	${INSTALL_SCRIPT} ${WRKDIR}/dsh ${STAGEDIR}${PREFIX}/bin/dsh
-	${MKDIR} ${STAGEDIR}${DOCSDIR}
-	${INSTALL_DATA} ${FILESDIR}/README.FreeBSD ${STAGEDIR}${DOCSDIR}/
+	@${FIND} ${STAGEDIR}${_APP_DIR} -type f -name '*.node' -exec ${STRIP_CMD} {} +
+
+post-install:
+	@${FIND} -s ${STAGEDIR}${_APP_DIR} -not -type d | \
+		${SED} -e 's|^${STAGEDIR}${PREFIX}/||' >> ${TMPPLIST}
+	@${FIND} -s ${STAGEDIR}${_APP_DIR} -type d -empty | \
+		${SED} -e 's|^${STAGEDIR}${PREFIX}/|@dir |' >> ${TMPPLIST}
 
 .include <bsd.port.mk>

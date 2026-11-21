@@ -1,11 +1,10 @@
---- native/system/packages/entry/package.json.orig	2026-11-13 05:26:07 UTC
+--- native/system/packages/entry/package.json.orig	2026-11-18 09:45:47 UTC
 +++ native/system/packages/entry/package.json
-@@ -41,6 +41,7 @@
-     "@deepseek-ai/node-addon-system-darwin-arm64": "workspace:~",
-     "@deepseek-ai/node-addon-system-darwin-x64": "workspace:~",
-     "@deepseek-ai/node-addon-system-linux-arm64": "workspace:~",
--    "@deepseek-ai/node-addon-system-linux-x64": "workspace:~"
-+    "@deepseek-ai/node-addon-system-linux-x64": "workspace:~",
-+    "@deepseek-ai/node-addon-system-freebsd-x64": "workspace:~"
-   }
- }
+@@ -21,6 +21,7 @@
+   },
+   "files": [
+     "README.md",
++    "bin/",
+     "lib/",
+     "!lib/*.tsbuildinfo",
+     "src/main.c",

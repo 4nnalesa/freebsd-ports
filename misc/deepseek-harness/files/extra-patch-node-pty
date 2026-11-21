@@ -1,0 +1,24 @@
+--- src/unix/pty.cc.orig
++++ src/unix/pty.cc
+@@ -112,7 +112,7 @@
+   int exit_code = 0, signal_code = 0;
+ };
+ 
+-#if defined(__linux__)
++#if defined(__linux__) || defined(__FreeBSD__)
+ 
+ static int
+ SetCloseOnExec(int fd) {
+@@ -131,7 +131,11 @@
+ static void
+ pty_close_inherited_fds() {
+   // Try close_range() first (Linux 5.9+, glibc 2.34+)
+-  #if defined(SYS_close_range) && defined(CLOSE_RANGE_CLOEXEC)
++  #if defined(__FreeBSD__) && defined(CLOSE_RANGE_CLOEXEC)
++  if (close_range(3, ~0U, CLOSE_RANGE_CLOEXEC) == 0) {
++    return;
++  }
++  #elif defined(SYS_close_range) && defined(CLOSE_RANGE_CLOEXEC)
+   if (syscall(SYS_close_range, 3, ~0U, CLOSE_RANGE_CLOEXEC) == 0) {
+     return;
+   }

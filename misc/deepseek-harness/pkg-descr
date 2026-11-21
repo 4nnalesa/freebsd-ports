@@ -1,6 +1,4 @@
 DeepSeek Harness (dsh) is an open-source agent harness developed by
-DeepSeek AI. It is built on an everything-is-a-plugin architecture and
-powered by Cordis, whose design is described in A Programming Paradigm
-for Spatiotemporal Composability.
-
-Documentation: https://deepseek-harness.github.io/deepseek-harness/
+DeepSeek AI. It is built on an everything-is-a-plugin architecture
+powered by Cordis, providing a Web UI, CLI, and extensible plugin
+runtime for AI coding agents.

@@ -1,87 +1,20 @@
---- packages/subprocess/subprocess-local/src/process-inspector.ts.orig	2026-11-13 05:26:07 UTC
+--- packages/subprocess/subprocess-local/src/process-inspector.ts.orig	2026-11-18 09:45:47 UTC
 +++ packages/subprocess/subprocess-local/src/process-inspector.ts
-@@ -389,7 +389,8 @@ function quiescent(state: string | undefined): boolean
- // Zombie and dead states answer "present in the table" but never "still
- // running"; a table without a state column can only report presence.
- function quiescent(state: string | undefined): boolean {
--  return state !== undefined && /^[ZXx]$/.test(state)
-+  // Linux emits one state letter; FreeBSD appends flag letters.
-+  return state !== undefined && /^[ZXx]/.test(state)
- }
- 
- class PosixProcessSnapshot implements ProcessSnapshot {
-@@ -515,6 +516,31 @@ function macProcessTable(internals: ProcessInspectorIn
-   return { rows, complete }
- }
- 
-+// FreeBSD calls the session-id keyword `sid` and rejects `sess`. Its `-o`
-+// parser mishandles a comma-joined list containing `=` keywords, so pass
-+// each keyword through a separate -o argument.
-+function freebsdProcessTable(internals: ProcessInspectorInternals): { rows: ProcessRow[]; complete: boolean } {
-+  let complete = true
-+  const rows = internals.exec('/bin/ps', [
-+    '-axo', 'pid=', '-o', 'ppid=', '-o', 'sid=', '-o', 'stat=', '-o', 'lstart=',
-+  ]).split('\n').flatMap((line) => {
-+    const match = /^\s*(\d+)\s+(\d+)\s+(\d+)\s+(\S+)\s+(.+?)\s*$/.exec(line)
-+    if (match?.[1] === undefined || match[2] === undefined || match[3] === undefined
-+      || match[4] === undefined || match[5] === undefined) {
-+      if (line.trim().length > 0) complete = false
-+      return []
-+    }
-+    return [{
-+      pid: Number(match[1]),
-+      parentPid: Number(match[2]),
-+      started: match[5],
-+      session: Number(match[3]),
-+      state: match[4],
-+    }]
-+  })
-+  return { rows, complete }
-+}
-+
- class MacProcessInspector extends PosixProcessInspector {
-   foregroundPgid(shellPid: number): number | undefined {
-     try {
-@@ -541,6 +567,34 @@ class MacProcessInspector extends PosixProcessInspecto
- 
- }
- 
-+class FreebsdProcessInspector extends PosixProcessInspector {
-+  foregroundPgid(shellPid: number): number | undefined {
-+    try {
-+      const value = Number(this.internals.exec('/bin/ps', ['-o', 'tpgid=', '-p', String(shellPid)]).trim())
-+      return Number.isSafeInteger(value) && value > 0 ? value : undefined
-+    } catch (_missingProcess) {
-+      return undefined
-+    }
-+  }
-+
-+  // FreeBSD does not expose the Linux /proc syscall view, so an exact PTY
-+  // read-wait probe is unavailable; readiness uses prompt and silence cues.
-+  isStdinWaiting(_pgid: number, _shellPid: number): boolean {
-+    return false
-+  }
-+
-+  isAlive(identity: ProcessIdentity): boolean {
-+    return freebsdProcessTable(this.internals).rows
-+      .some(entry => entry.pid === identity.pid && entry.started === identity.started)
-+  }
-+
-+  snapshot(): ProcessSnapshot {
-+    const table = freebsdProcessTable(this.internals)
-+    return new PosixProcessSnapshot(table.rows, table.complete)
-+  }
-+
-+}
-+
- /**
-  * Create the supported platform inspector or fail at plugin load.
-  * @param platform - target Node platform.
-@@ -555,6 +609,7 @@ export function createProcessInspector(
+@@ -498,7 +498,7 @@ function macProcessTable(internals: ProcessInspectorIn
+ // macOS row can answer presence and parentage but never session membership.
+ function macProcessTable(internals: ProcessInspectorInternals): { rows: ProcessRow[]; complete: boolean } {
+   let complete = true
+-  const rows = internals.exec('/bin/ps', ['-axo', 'pid=,ppid=,lstart=']).split('\n').flatMap((line) => {
++  const rows = internals.exec('/bin/ps', ['-ax', '-o', 'pid=', '-o', 'ppid=', '-o', 'lstart=']).split('\n').flatMap((line) => {
+     const match = /^\s*(\d+)\s+(\d+)\s+(.+?)\s*$/.exec(line)
+     if (match?.[1] === undefined || match[2] === undefined || match[3] === undefined) {
+       if (line.trim().length > 0) complete = false
+@@ -554,7 +554,7 @@ export function createProcessInspector(
+   internals: ProcessInspectorInternals = DEFAULT_INTERNALS,
  ): ProcessInspector {
    if (platform === 'linux') return new LinuxProcessInspector(arch, internals)
-   if (platform === 'darwin') return new MacProcessInspector(internals)
-+  if (platform === 'freebsd') return new FreebsdProcessInspector(internals)
+-  if (platform === 'darwin') return new MacProcessInspector(internals)
++  if (platform === 'darwin' || platform === 'freebsd') return new MacProcessInspector(internals)
    if (platform === 'win32') return createWindowsProcessInspector()
    throw new Error(`subprocess-local: terminal inspection is unsupported on platform ${platform}`)
  }

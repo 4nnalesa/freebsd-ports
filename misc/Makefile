@@ -101,6 +101,7 @@
     SUBDIR += ddate
     SUBDIR += deark
     SUBDIR += deco
+    SUBDIR += deepseek-harness
     SUBDIR += dejagnu
     SUBDIR += delay
     SUBDIR += diction
