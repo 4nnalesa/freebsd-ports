@@ -624,6 +624,7 @@
     SUBDIR += onionshare-cli
     SUBDIR += onlyoffice-documentserver
     SUBDIR += opencart
+    SUBDIR += opencloud
     SUBDIR += openemr
     SUBDIR += opengist
     SUBDIR += openresty
@@ -2661,6 +2662,7 @@
     SUBDIR += s
     SUBDIR += sabredav
     SUBDIR += samdruckerserver
+    SUBDIR += samdruckerweb
     SUBDIR += sarg
     SUBDIR += sblg
     SUBDIR += scloader

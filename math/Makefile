@@ -167,6 +167,7 @@
     SUBDIR += R-cran-uroot
     SUBDIR += R-cran-wk
     SUBDIR += R-cran-xts
+    SUBDIR += R-cran-yardstick
     SUBDIR += R-cran-zoo
     SUBDIR += SCIP
     SUBDIR += SoPlex
@@ -275,7 +276,6 @@
     SUBDIR += combblas
     SUBDIR += conauto
     SUBDIR += concorde
-    SUBDIR += convertall
     SUBDIR += coq
     SUBDIR += cosma
     SUBDIR += costa
@@ -1082,6 +1082,7 @@
     SUBDIR += py-mip
     SUBDIR += py-mixsimulator
     SUBDIR += py-ml-dtypes
+    SUBDIR += py-mlc-z3-static
     SUBDIR += py-mnnpy
     SUBDIR += py-moarchiving
     SUBDIR += py-modin

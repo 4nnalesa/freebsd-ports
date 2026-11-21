@@ -349,7 +349,7 @@ svn:*:404:
 rustfs:*:405:
 tuwunel:*:406:
 continuwuity:*:407:
-# free: 408
+woodpecker:*:408:
 # free: 409
 # free: 410
 uhub:*:411:
@@ -772,7 +772,7 @@ statsd:*:826:
 _tuptime:*:827:
 cirrus:*:828:
 # free: 829
-# free: 830
+opencloud:*:830:
 telemt:*:831:
 beehive:*:832:
 bhyvemgrd:*:833:

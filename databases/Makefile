@@ -107,7 +107,6 @@
     SUBDIR += innotop
     SUBDIR += iowow
     SUBDIR += ip4r
-    SUBDIR += ipa_sdb
     SUBDIR += iplike
     SUBDIR += jdb
     SUBDIR += jetbrains-datagrip
@@ -845,6 +844,7 @@
     SUBDIR += py-marshmallow-sqlalchemy
     SUBDIR += py-minidb
     SUBDIR += py-mongoengine
+    SUBDIR += py-mongomock
     SUBDIR += py-motor
     SUBDIR += py-mycli
     SUBDIR += py-mysql-connector-python
@@ -1126,6 +1126,7 @@
     SUBDIR += rubygem-redis-actionpack-rails61
     SUBDIR += rubygem-redis-actionpack-rails70
     SUBDIR += rubygem-redis-client
+    SUBDIR += rubygem-redis-cloud-auth
     SUBDIR += rubygem-redis-cluster-client
     SUBDIR += rubygem-redis-clustering
     SUBDIR += rubygem-redis-clustering-gitlab
