@@ -1,5 +1,5 @@
 PORTNAME=	luanti
-DISTVERSION=	5.17.0
+DISTVERSION=	5.18.0
 PORTREVISION=	1
 CATEGORIES=	games
 
@@ -12,7 +12,8 @@ LICENSE_FILE=	${WRKSRC}/doc/lgpl-2.1.txt
 
 LIB_DEPENDS=	libgmp.so:math/gmp \
 		libjsoncpp.so:devel/jsoncpp \
-		libzstd.so:archivers/zstd
+		libzstd.so:archivers/zstd \
+		libzip.so:archivers/libzip
 
 USES=		cmake compiler:c++17-lang cpe iconv:wchar_t sdl ssl sqlite
 GH_ACCOUNT=	luanti-org

@@ -1,5 +1,5 @@
-TIMESTAMP = 1792654405
-SHA256 (go/databases_pgbot/pgbot-v0.9.0/v0.9.0.mod) = 55d9aed44846d80e752d44d2bbb35d24e9773294506b3f16e4a297764e382619
-SIZE (go/databases_pgbot/pgbot-v0.9.0/v0.9.0.mod) = 1779
-SHA256 (go/databases_pgbot/pgbot-v0.9.0/v0.9.0.zip) = 6b48b138fa1ca4866a50ab192f458180a66026f18693b21fb1dea87e89416bfc
-SIZE (go/databases_pgbot/pgbot-v0.9.0/v0.9.0.zip) = 4271374
+TIMESTAMP = 1795556581
+SHA256 (go/databases_pgbot/pgbot-v0.11.1/v0.11.1.mod) = f2d75caa4256fa03d7c1945c2d0b9de7e7bf14fcdc6a0ffb98a4f42c3c9a7961
+SIZE (go/databases_pgbot/pgbot-v0.11.1/v0.11.1.mod) = 1779
+SHA256 (go/databases_pgbot/pgbot-v0.11.1/v0.11.1.zip) = 6509e3b235f939bbc268b79ebca79085480b8b92de5f9047cf45b82fd3a6cbeb
+SIZE (go/databases_pgbot/pgbot-v0.11.1/v0.11.1.zip) = 5268608

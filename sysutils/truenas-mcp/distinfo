@@ -1,0 +1,5 @@
+TIMESTAMP = 1795513921
+SHA256 (go/sysutils_truenas-mcp/truenas-mcp-v1.0.1/v1.0.1.mod) = c1e79502fb507c4a293c5266ae7d6c2bc7342410efb170a3d107405a8974cee6
+SIZE (go/sysutils_truenas-mcp/truenas-mcp-v1.0.1/v1.0.1.mod) = 639
+SHA256 (go/sysutils_truenas-mcp/truenas-mcp-v1.0.1/v1.0.1.zip) = d49e568af8a9176d0d0e0eb639c7dd7528b55448b604c321eda56c2f5732180a
+SIZE (go/sysutils_truenas-mcp/truenas-mcp-v1.0.1/v1.0.1.zip) = 824100

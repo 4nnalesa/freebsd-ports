@@ -1315,6 +1315,7 @@
     SUBDIR += rubygem-ohai-gitlab
     SUBDIR += rubygem-ohai18
     SUBDIR += rubygem-openbolt
+    SUBDIR += rubygem-openbolt9
     SUBDIR += rubygem-openfact
     SUBDIR += rubygem-openvoxserver-ca
     SUBDIR += rubygem-parallel
@@ -1527,6 +1528,7 @@
     SUBDIR += treemd
     SUBDIR += treetop
     SUBDIR += triton
+    SUBDIR += truenas-mcp
     SUBDIR += trueos-libqt5
     SUBDIR += try-rs
     SUBDIR += ts
@@ -1534,6 +1536,7 @@
     SUBDIR += ttyd
     SUBDIR += ttyload
     SUBDIR += tuckr
+    SUBDIR += tuios
     SUBDIR += tuptime
     SUBDIR += turbostat
     SUBDIR += tvterm

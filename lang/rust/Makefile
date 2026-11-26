@@ -1,6 +1,6 @@
 PORTNAME=	rust
 PORTVERSION?=	1.99.1
-PORTREVISION?=	3
+PORTREVISION?=	4
 CATEGORIES=	lang
 MASTER_SITES=	https://static.rust-lang.org/dist/:src \
 		https://dev-static.rust-lang.org/dist/:src \
@@ -69,6 +69,8 @@ SOURCES_VARS=		_COMPONENTS+=rust-src-${_PACKAGE_VERS} \
 			_RUST_TOOLS+=src
 WASM_VARS=		_COMPONENTS+="rust-analysis-${_PACKAGE_VERS}-wasm32-unknown-unknown rust-std-${_PACKAGE_VERS}-wasm32-unknown-unknown" \
 			_RUST_TARGETS+=wasm32-unknown-unknown
+
+EXTRACT_AFTER_ARGS=	--exclude .github --no-same-owner --no-same-permissions
 
 # See WRKSRC/src/stage0 for the date and version values
 BOOTSTRAPS_DATE?=		2026-08-20
@@ -151,9 +153,6 @@ IGNORE=	fails to build with qemu-user-static
 DISTFILES:=	${DISTFILES:M*\:src} \
 		${ONLY_FOR_ARCHS:O:@_arch@${:!${MAKE} ARCH=${_arch} -V'DISTFILES:N*\:src'!}@}
 .endif
-
-post-extract:
-	@${FIND} -d ${WRKSRC} -name .github -exec ${RM} -r {} \;
 
 post-patch:
 	@${REINPLACE_CMD} 's,gdb,${LOCALBASE}/bin/gdb,' ${WRKSRC}/src/etc/rust-gdb
